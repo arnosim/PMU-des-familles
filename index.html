@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Le PMU — Course à boire</title>
+<meta name="description" content="Le PMU : la course de chevaux à boire, en version web. Misez vos gorgées, tirez les cartes, gardez vos profils et leurs stats.">
+<meta name="theme-color" content="#163a2d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Le PMU">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Crect%20width='100'%20height='100'%20rx='22'%20fill='%23163a2d'/%3E%3Ctext%20x='50'%20y='52'%20font-size='58'%20text-anchor='middle'%20dominant-baseline='central'%3E%F0%9F%90%8E%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --turf:#1c4a39;
+    --turf-deep:#163a2d;
+    --turf-lane:#235a45;
+    --turf-stripe:#27634c;
+    --rail:#9a6536;
+    --rail-light:#c08a52;
+    --rail-dark:#6f4724;
+    --gold:#e6b84c;
+    --gold-deep:#c69632;
+    --cream:#f4ecd6;
+    --paper:#fbf6e8;
+    --ink:#241a0f;
+    --ink-soft:#4a3a27;
+    --white:#fbf7ee;
+
+    --c1:#d6443b; /* coeur  - rouge */
+    --c2:#e0a32e; /* carreau- or */
+    --c3:#3d77b8; /* trefle - bleu */
+    --c4:#9a5bb0; /* pique  - violet */
+
+    --shadow: 0 8px 24px rgba(0,0,0,.28);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:
+      radial-gradient(ellipse at 50% -10%, #2a6049 0%, var(--turf) 45%, var(--turf-deep) 100%);
+    color:var(--white);
+    min-height:100dvh;
+    -webkit-font-smoothing:antialiased;
+    padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+    overflow-x:hidden;
+  }
+  .wrap{max-width:560px;margin:0 auto;padding:20px 18px 40px;}
+
+  /* ---------- En-tête ---------- */
+  header{text-align:center;margin:8px 0 22px;}
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    font-size:11px;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--gold);opacity:.9;
+  }
+  h1{
+    font-family:'Oswald',sans-serif;font-weight:700;
+    font-size:clamp(40px,13vw,64px);line-height:.92;
+    text-transform:uppercase;letter-spacing:.01em;
+    margin:4px 0 2px;
+  }
+  h1 .sub{display:block;font-weight:400;font-size:.34em;letter-spacing:.42em;color:var(--cream);opacity:.8;margin-top:8px;}
+  .rule{height:3px;width:64px;margin:14px auto 0;background:var(--gold);border-radius:2px;
+    box-shadow:0 0 0 4px rgba(230,184,76,.15);}
+
+  /* ---------- Panneaux ---------- */
+  .panel{
+    background:var(--paper);color:var(--ink);
+    border-radius:14px;padding:18px;margin-bottom:16px;
+    box-shadow:var(--shadow);
+    border:1px solid rgba(0,0,0,.08);
+  }
+  .panel h2{
+    font-family:'Oswald',sans-serif;text-transform:uppercase;font-weight:600;
+    font-size:15px;letter-spacing:.12em;color:var(--ink-soft);
+    display:flex;align-items:center;gap:8px;margin-bottom:14px;
+  }
+  .panel h2 .n{
+    font-family:'Space Mono',monospace;background:var(--turf);color:var(--gold);
+    width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;
+  }
+
+  label{display:block;font-size:12px;font-weight:600;color:var(--ink-soft);
+    text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+  input[type=text]{
+    width:100%;font-family:'Inter';font-size:16px;color:var(--ink);
+    background:var(--white);border:1.5px solid #d8cba9;border-radius:9px;
+    padding:12px 14px;outline:none;
+  }
+  input[type=text]:focus{border-color:var(--gold-deep);box-shadow:0 0 0 3px rgba(230,184,76,.25);}
+
+  .btn{
+    font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.08em;
+    font-weight:600;font-size:15px;border:none;border-radius:10px;cursor:pointer;
+    padding:14px 18px;transition:transform .08s ease, filter .15s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .btn:active{transform:translateY(1px) scale(.99);}
+  .btn-gold{background:linear-gradient(180deg,var(--gold),var(--gold-deep));color:var(--ink);
+    box-shadow:0 4px 0 #9c7625, var(--shadow);width:100%;}
+  .btn-gold:active{box-shadow:0 1px 0 #9c7625, var(--shadow);}
+  .btn-ghost{background:transparent;color:var(--cream);border:1.5px solid rgba(255,255,255,.35);}
+  .btn-add{background:var(--turf);color:var(--white);padding:12px 16px;}
+  .btn:disabled{filter:grayscale(.6) opacity(.55);cursor:not-allowed;}
+
+  /* ---------- Liste joueurs / paris ---------- */
+  .players-empty{font-size:13px;color:var(--ink-soft);font-style:italic;padding:6px 2px;}
+  .bet-row{
+    display:flex;align-items:center;gap:10px;padding:12px;border-radius:11px;
+    background:var(--white);border:1px solid #e2d6b6;margin-bottom:10px;
+    position:relative;
+  }
+  .bet-name{font-weight:600;font-size:15px;flex:1;min-width:0;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .bet-meta{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink-soft);}
+  .bet-silk{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;
+    font-size:18px;color:#fff;flex-shrink:0;font-weight:700;box-shadow:inset 0 -3px 6px rgba(0,0,0,.18);}
+  .del{background:none;border:none;color:#b5462f;font-size:20px;cursor:pointer;
+    line-height:1;padding:4px 6px;flex-shrink:0;}
+
+  /* choix cheval */
+  .silk-pick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
+  .silk-opt{
+    border:2px solid transparent;border-radius:11px;padding:10px 4px 8px;cursor:pointer;
+    background:var(--white);text-align:center;transition:.12s;
+  }
+  .silk-opt .disc{width:40px;height:40px;border-radius:50%;margin:0 auto 6px;display:grid;
+    place-items:center;font-size:22px;color:#fff;box-shadow:inset 0 -4px 8px rgba(0,0,0,.2);}
+  .silk-opt .nm{font-size:11px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;}
+  .silk-opt.sel{border-color:var(--gold-deep);background:#fff7e2;transform:translateY(-2px);}
+
+  /* gorgées stepper */
+  .stepper{display:flex;align-items:center;gap:0;border:1.5px solid #d8cba9;border-radius:10px;overflow:hidden;width:fit-content;}
+  .stepper button{width:46px;height:46px;border:none;background:var(--white);font-size:22px;font-family:'Oswald';
+    cursor:pointer;color:var(--ink);}
+  .stepper button:active{background:#f0e6c8;}
+  .stepper .val{width:54px;text-align:center;font-family:'Space Mono';font-size:20px;font-weight:700;}
+  .field-row{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;}
+  .field-row > div:first-child{flex:1;min-width:140px;}
+
+  /* ---------- Hippodrome ---------- */
+  #screen-course{display:none;}
+  .tote{
+    background:#0e2a20;border:2px solid var(--gold-deep);border-radius:12px;
+    padding:10px 12px;margin-bottom:14px;display:flex;justify-content:space-between;gap:6px;
+    box-shadow:inset 0 0 24px rgba(0,0,0,.5);
+  }
+  .tote .cell{flex:1;text-align:center;}
+  .tote .pos{font-family:'Space Mono';font-size:22px;font-weight:700;line-height:1;}
+  .tote .lbl{font-size:9px;text-transform:uppercase;letter-spacing:.1em;opacity:.7;margin-top:3px;}
+
+  .track{
+    background:
+      repeating-linear-gradient(0deg, var(--turf-lane) 0, var(--turf-lane) calc(25% - 1px), rgba(0,0,0,.18) calc(25% - 1px), rgba(0,0,0,.18) 25%);
+    border:3px solid var(--rail);border-radius:12px;padding:0;overflow:hidden;
+    box-shadow:var(--shadow), inset 0 0 30px rgba(0,0,0,.25);position:relative;
+  }
+  .track::before{ /* poteau d'arrivée */
+    content:"";position:absolute;top:0;bottom:0;right:46px;width:8px;z-index:1;
+    background:repeating-linear-gradient(45deg,#fff 0 6px,#1a1a1a 6px 12px);
+    opacity:.85;
+  }
+  .lane{height:74px;position:relative;display:flex;align-items:center;}
+  .lane:nth-child(odd){background:rgba(255,255,255,.03);}
+  .lane .furlongs{position:absolute;inset:0;display:flex;justify-content:space-between;
+    padding:0 52px 0 8px;pointer-events:none;}
+  .lane .furlongs span{width:1px;background:rgba(255,255,255,.12);}
+  .horse{
+    position:absolute;left:6px;transition:left 1s cubic-bezier(.34,1.2,.64,1);
+    display:flex;align-items:center;gap:7px;z-index:2;will-change:left;
+  }
+  .horse .silk{
+    width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+    font-size:24px;color:#fff;font-weight:700;
+    box-shadow:inset 0 -5px 9px rgba(0,0,0,.25), 0 4px 8px rgba(0,0,0,.35);
+    border:2px solid rgba(255,255,255,.55);
+  }
+  .horse .num{position:absolute;top:-7px;left:-7px;width:20px;height:20px;border-radius:50%;
+    background:var(--gold);color:var(--ink);font-family:'Space Mono';font-size:11px;font-weight:700;
+    display:grid;place-items:center;border:1.5px solid #fff;}
+  .horse .emoji{font-size:26px;filter:drop-shadow(0 3px 3px rgba(0,0,0,.4));}
+  .horse.running{animation:gallop .35s ease-in-out infinite;}
+  @keyframes gallop{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-5px) rotate(1deg)}}
+  .horse.won .silk{box-shadow:inset 0 -5px 9px rgba(0,0,0,.25),0 0 0 4px var(--gold),0 0 24px var(--gold);}
+  .horse.recoil .silk{animation:recoilFlash .65s ease;}
+  @keyframes recoilFlash{
+    0%,100%{box-shadow:inset 0 -5px 9px rgba(0,0,0,.25),0 4px 8px rgba(0,0,0,.35);}
+    30%{box-shadow:0 0 0 5px #d6443b,0 0 22px #d6443b;}
+  }
+
+  /* étages (cartes de recul) */
+  .etages{display:flex;gap:6px;justify-content:space-between;margin-bottom:12px;}
+  .etage{
+    flex:1;height:44px;border-radius:8px;position:relative;display:grid;place-items:center;
+    background:repeating-linear-gradient(45deg,#1c4a39 0 6px,#163a2d 6px 12px);
+    border:2px solid var(--gold-deep);color:var(--gold);
+    font-family:'Space Mono';font-weight:700;font-size:18px;transition:.35s;
+  }
+  .etage .lv{position:absolute;top:-9px;left:50%;transform:translateX(-50%);
+    background:var(--turf-deep);color:var(--cream);font-size:9px;padding:1px 7px;border-radius:8px;
+    letter-spacing:.06em;white-space:nowrap;}
+  .etage.revealed{background:var(--paper);border-color:var(--gold);font-size:24px;}
+
+  /* bannière d'annonce */
+  .announce{
+    position:fixed;left:50%;top:14px;transform:translateX(-50%) translateY(-90px);
+    background:var(--ink);color:var(--gold);border:2px solid var(--gold);border-radius:30px;
+    padding:11px 22px;font-family:'Oswald';text-transform:uppercase;letter-spacing:.05em;font-size:14px;
+    box-shadow:var(--shadow);z-index:50;opacity:0;transition:.4s cubic-bezier(.34,1.4,.64,1);
+    pointer-events:none;max-width:92vw;text-align:center;line-height:1.2;
+  }
+  .announce.show{transform:translateX(-50%) translateY(0);opacity:1;}
+
+  /* zone de tirage */
+  .draw-zone{margin-top:16px;display:flex;flex-direction:column;align-items:center;gap:14px;}
+  .card{
+    width:96px;height:134px;border-radius:11px;position:relative;perspective:600px;
+  }
+  .card-inner{width:100%;height:100%;position:relative;transition:transform .45s;transform-style:preserve-3d;}
+  .card.flipped .card-inner{transform:rotateY(180deg);}
+  .card-face{position:absolute;inset:0;border-radius:11px;backface-visibility:hidden;
+    display:grid;place-items:center;box-shadow:var(--shadow);}
+  .card-back{
+    background:
+      repeating-linear-gradient(45deg,#1c4a39 0 8px,#163a2d 8px 16px);
+    border:3px solid var(--gold);
+  }
+  .card-back::after{content:"PMU";font-family:'Oswald';font-weight:700;color:var(--gold);
+    letter-spacing:.1em;font-size:20px;}
+  .card-front{background:var(--paper);transform:rotateY(180deg);border:2px solid #d8cba9;
+    flex-direction:column;color:var(--ink);font-family:'Space Mono';font-weight:700;}
+  .card-front .rank{font-size:34px;line-height:1;}
+  .card-front .pip{font-size:40px;line-height:1;margin-top:4px;}
+
+  .pace{display:flex;gap:8px;align-items:center;justify-content:center;font-size:12px;
+    color:var(--cream);text-transform:uppercase;letter-spacing:.08em;}
+  .pace button{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);
+    color:var(--white);border-radius:8px;padding:6px 12px;font-family:'Oswald';cursor:pointer;font-size:12px;}
+  .pace button.on{background:var(--gold);color:var(--ink);border-color:var(--gold);}
+
+  /* ---------- Arrivée ---------- */
+  #screen-arrivee{display:none;text-align:center;}
+  .winner-card{background:var(--paper);color:var(--ink);border-radius:16px;padding:26px 20px;
+    box-shadow:var(--shadow);border:2px solid var(--gold);margin-bottom:18px;}
+  .winner-silk{width:80px;height:80px;border-radius:50%;margin:0 auto 12px;display:grid;place-items:center;
+    font-size:42px;color:#fff;box-shadow:inset 0 -6px 12px rgba(0,0,0,.25),0 0 0 5px var(--gold);}
+  .winner-card .lbl{font-family:'Space Mono';font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);}
+  .winner-card .nm{font-family:'Oswald';font-size:34px;text-transform:uppercase;font-weight:700;margin-top:4px;}
+  .result-list{text-align:left;}
+  .result-list .grp{margin-bottom:16px;}
+  .result-list .grp-t{font-family:'Oswald';text-transform:uppercase;font-size:13px;letter-spacing:.1em;
+    margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+  .pill{display:inline-block;font-family:'Space Mono';font-size:11px;padding:2px 8px;border-radius:20px;}
+  .pill.win{background:#1c4a39;color:var(--gold);}
+  .pill.lose{background:#7a2c20;color:#ffd9cf;}
+  .res-row{display:flex;justify-content:space-between;align-items:center;background:var(--white);
+    border-radius:9px;padding:11px 13px;margin-bottom:7px;border:1px solid #e2d6b6;color:var(--ink);}
+  .res-row .who{font-weight:600;}
+  .res-row .amt{font-family:'Space Mono';font-weight:700;}
+  .amt.win{color:#2e7d4f;}.amt.lose{color:#b5462f;}
+
+  .moderation{text-align:center;font-size:11px;color:rgba(255,255,255,.55);margin-top:24px;
+    letter-spacing:.04em;line-height:1.6;}
+  .moderation b{color:rgba(255,255,255,.8);}
+
+  .err{color:#ffd9cf;font-size:13px;margin-top:8px;min-height:18px;}
+
+  /* écurie : profils enregistrés */
+  .stable{display:flex;flex-wrap:wrap;gap:9px;}
+  .prof{
+    display:flex;align-items:center;gap:9px;background:var(--white);border:1px solid #e2d6b6;
+    border-radius:11px;padding:8px 9px 8px 8px;cursor:pointer;transition:.12s;
+  }
+  .prof:active{transform:scale(.97);}
+  .prof.inrace{opacity:.45;}
+  .prof .pdisc{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;
+    font-size:16px;color:#fff;flex-shrink:0;box-shadow:inset 0 -3px 6px rgba(0,0,0,.18);}
+  .prof .pinfo{line-height:1.15;}
+  .prof .pn{font-weight:600;font-size:14px;color:var(--ink);}
+  .prof .ps{font-family:'Space Mono';font-size:10px;color:var(--ink-soft);}
+  .prof .pi{border:none;background:none;color:var(--ink-soft);font-size:15px;cursor:pointer;
+    padding:2px 4px;align-self:stretch;}
+  .stable-empty{font-size:13px;color:var(--ink-soft);font-style:italic;}
+
+  /* modale stats */
+  .modal-bg{position:fixed;inset:0;background:rgba(10,28,21,.72);backdrop-filter:blur(3px);
+    z-index:100;display:none;align-items:center;justify-content:center;padding:22px;}
+  .modal-bg.open{display:flex;}
+  .modal{background:var(--paper);color:var(--ink);border-radius:16px;padding:22px;max-width:380px;width:100%;
+    box-shadow:var(--shadow);border:2px solid var(--gold);position:relative;}
+  .modal .close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:22px;
+    cursor:pointer;color:var(--ink-soft);line-height:1;}
+  .modal-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+  .modal-head .mdisc{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:26px;
+    color:#fff;box-shadow:inset 0 -4px 8px rgba(0,0,0,.2);}
+  .modal-head .mn{font-family:'Oswald';font-size:26px;text-transform:uppercase;font-weight:700;}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+  .stat{background:var(--white);border:1px solid #e2d6b6;border-radius:10px;padding:11px 12px;}
+  .stat .v{font-family:'Space Mono';font-size:22px;font-weight:700;line-height:1;}
+  .stat .k{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);margin-top:5px;}
+  .modal .fav{display:flex;align-items:center;gap:9px;background:#1c4a39;color:var(--cream);
+    border-radius:10px;padding:10px 12px;font-size:13px;}
+  .modal .fav .fdisc{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:15px;}
+  .modal-actions{margin-top:14px;display:flex;gap:10px;}
+  .modal-actions .btn{flex:1;padding:11px;font-size:13px;}
+  .btn-danger{background:#7a2c20;color:#ffd9cf;}
+
+  /* distance de course */
+  .dist-pick{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;}
+  .dist-opt{border:2px solid #d8cba9;border-radius:9px;background:var(--white);cursor:pointer;
+    padding:11px 0;text-align:center;font-family:'Space Mono';font-weight:700;font-size:17px;color:var(--ink);transition:.1s;}
+  .dist-opt.sel{border-color:var(--gold-deep);background:#fff7e2;}
+  .dist-hint{font-size:12px;color:var(--ink-soft);margin-top:10px;line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Course à boire · 4 partants</div>
+    <h1>Le PMU<span class="sub">Tiercé dans le désordre</span></h1>
+    <div class="rule"></div>
+  </header>
+
+  <!-- ============ ÉCRAN 1 : GUICHET ============ -->
+  <section id="screen-accueil">
+
+    <div class="panel" id="stablePanel" style="display:none;">
+      <h2><span class="n">★</span>L'écurie</h2>
+      <div class="stable" id="stable"></div>
+    </div>
+
+    <div class="panel">
+      <h2><span class="n">1</span>Inscrivez les parieurs</h2>
+      <div class="field-row">
+        <div>
+          <label for="pname">Prénom</label>
+          <input type="text" id="pname" placeholder="ex. Arno" autocomplete="off" maxlength="14">
+        </div>
+        <button class="btn btn-add" id="openBet">Ajouter</button>
+      </div>
+      <div class="err" id="err"></div>
+    </div>
+
+    <!-- formulaire de pari (masqué par défaut) -->
+    <div class="panel" id="betPanel" style="display:none;">
+      <h2><span class="n">2</span>Pari de <span id="curName" style="color:var(--ink);margin-left:4px;">—</span></h2>
+      <label>Sur quel cheval ?</label>
+      <div class="silk-pick" id="silkPick"></div>
+      <label>Combien de gorgées en jeu ?</label>
+      <div class="stepper">
+        <button id="gMinus">–</button>
+        <div class="val" id="gVal">3</div>
+        <button id="gPlus">+</button>
+      </div>
+      <div style="height:14px"></div>
+      <button class="btn btn-gold" id="confirmBet">Valider le ticket</button>
+    </div>
+
+    <div class="panel">
+      <h2><span class="n">3</span>Les tickets</h2>
+      <div id="betList"><div class="players-empty">Aucun pari pour l'instant. Inscrivez au moins 2 parieurs.</div></div>
+    </div>
+
+    <div class="panel">
+      <h2><span class="n">4</span>Distance de la course</h2>
+      <div class="dist-pick" id="distPick"></div>
+      <div class="dist-hint" id="distHint"></div>
+    </div>
+
+    <button class="btn btn-gold" id="startRace" disabled>Lancer la course</button>
+  </section>
+
+  <!-- ============ ÉCRAN 2 : LA COURSE ============ -->
+  <section id="screen-course">
+    <div class="tote" id="tote"></div>
+    <div class="etages" id="etages"></div>
+    <div class="track" id="track"></div>
+
+    <div class="draw-zone">
+      <div class="card" id="card">
+        <div class="card-inner">
+          <div class="card-face card-back"></div>
+          <div class="card-face card-front" id="cardFront">
+            <div class="rank">—</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-gold" id="drawBtn" style="max-width:260px;">Tirer une carte</button>
+      <div class="pace">
+        Allure :
+        <button data-mode="manual" class="on">Manuelle</button>
+        <button data-mode="auto">Auto</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ÉCRAN 3 : ARRIVÉE ============ -->
+  <section id="screen-arrivee">
+    <div class="winner-card">
+      <div class="winner-silk" id="winSilk"></div>
+      <div class="lbl">Vainqueur du PMU</div>
+      <div class="nm" id="winName">—</div>
+    </div>
+    <div class="result-list" id="results"></div>
+    <button class="btn btn-gold" id="replay" style="margin-top:6px;">Nouvelle course</button>
+  </section>
+
+  <div class="announce" id="announce"></div>
+
+  <!-- modale profil -->
+  <div class="modal-bg" id="statsModal">
+    <div class="modal">
+      <button class="close" id="statsClose" aria-label="Fermer">✕</button>
+      <div class="modal-head">
+        <div class="mdisc" id="mDisc">★</div>
+        <div class="mn" id="mName">—</div>
+      </div>
+      <div class="stat-grid" id="statGrid"></div>
+      <div class="fav" id="mFav"></div>
+      <div class="modal-actions">
+        <button class="btn btn-gold" id="mEnroll">Inscrire à la course</button>
+        <button class="btn btn-danger" id="mDelete">Supprimer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="moderation">
+    À consommer avec <b>modération</b>. L'abus d'alcool est dangereux pour la santé.<br>
+    Rien ne vous empêche de remplacer les gorgées par de l'eau. 🥤
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---- Définition des chevaux (couleurs de cartes) ----
+  const HORSES = [
+    {id:0, suit:"coeur",   name:"Cœur",    pip:"♥", emoji:"🐎", color:"var(--c1)", num:1},
+    {id:1, suit:"carreau", name:"Carreau", pip:"♦", emoji:"🐎", color:"var(--c2)", num:2},
+    {id:2, suit:"trefle",  name:"Trèfle",  pip:"♣", emoji:"🐎", color:"var(--c3)", num:3},
+    {id:3, suit:"pique",   name:"Pique",   pip:"♠", emoji:"🐎", color:"var(--c4)", num:4},
+  ];
+  const FINISH_MIN = 4;
+  const FINISH_MAX = 9;        // max imposé par le jeu de 52 cartes (voir note)
+  let finishSteps = 6;         // cases à franchir pour gagner (réglable)
+  const RANKS = ["2","3","4","5","6","7","8","9","10","V","D","R"]; // sans l'As (= les chevaux)
+
+  let players = [];            // {name, horse, gorgees}
+  let positions = [0,0,0,0];
+  let checkpoints = [];        // {level, horse, revealed}
+  let deck = [];
+  let winner = null;
+  let raceOver = false;
+  let autoMode = false;
+  let autoTimer = null;
+  let drawing = false;
+
+  // ---- Sélection en cours (formulaire de pari) ----
+  let pendingName = "";
+  let selHorse = null;
+  let gorgees = 3;
+
+  const $ = s => document.querySelector(s);
+  const screens = {
+    accueil: $("#screen-accueil"),
+    course:  $("#screen-course"),
+    arrivee: $("#screen-arrivee"),
+  };
+  function show(name){
+    Object.values(screens).forEach(s=>s.style.display="none");
+    screens[name].style.display = (name==="course")?"block":(name==="arrivee"?"block":"block");
+  }
+
+  // ---------- ÉCRAN 1 ----------
+  const nameInput = $("#pname");
+  const errBox = $("#err");
+
+  function showError(msg){ errBox.textContent = msg; }
+
+  $("#openBet").addEventListener("click", openBetForm);
+  nameInput.addEventListener("keydown", e=>{ if(e.key==="Enter") openBetForm(); });
+
+  function openBetForm(){
+    const nm = nameInput.value.trim();
+    if(!nm){ showError("Entrez un prénom."); return; }
+    if(players.some(p=>p.name.toLowerCase()===nm.toLowerCase())){
+      showError("Ce prénom est déjà inscrit."); return;
+    }
+    showError("");
+    pendingName = nm;
+    selHorse = null;
+    gorgees = 3;
+    $("#curName").textContent = nm;
+    $("#gVal").textContent = gorgees;
+    renderSilkPick();
+    $("#betPanel").style.display = "block";
+    $("#betPanel").scrollIntoView({behavior:"smooth", block:"nearest"});
+  }
+
+  function renderSilkPick(){
+    const box = $("#silkPick");
+    box.innerHTML = "";
+    HORSES.forEach(h=>{
+      const d = document.createElement("div");
+      d.className = "silk-opt" + (selHorse===h.id?" sel":"");
+      d.innerHTML = `<div class="disc" style="background:${h.color}">${h.pip}</div><div class="nm">${h.name}</div>`;
+      d.addEventListener("click", ()=>{ selHorse = h.id; renderSilkPick(); });
+      box.appendChild(d);
+    });
+  }
+
+  $("#gMinus").addEventListener("click", ()=>{ gorgees=Math.max(1,gorgees-1); $("#gVal").textContent=gorgees; });
+  $("#gPlus").addEventListener("click",  ()=>{ gorgees=Math.min(10,gorgees+1); $("#gVal").textContent=gorgees; });
+
+  $("#confirmBet").addEventListener("click", ()=>{
+    if(selHorse===null){ showError("Choisissez un cheval."); return; }
+    players.push({name:pendingName, horse:selHorse, gorgees:gorgees});
+    nameInput.value = "";
+    $("#betPanel").style.display = "none";
+    renderBets();
+    nameInput.focus();
+  });
+
+  function renderBets(){
+    const list = $("#betList");
+    if(players.length===0){
+      list.innerHTML = `<div class="players-empty">Aucun pari pour l'instant. Inscrivez au moins 2 parieurs.</div>`;
+    } else {
+      list.innerHTML = "";
+      players.forEach((p,i)=>{
+        const h = HORSES[p.horse];
+        const row = document.createElement("div");
+        row.className = "bet-row";
+        row.innerHTML = `
+          <div class="bet-silk" style="background:${h.color}">${h.pip}</div>
+          <div style="flex:1;min-width:0">
+            <div class="bet-name">${escapeHtml(p.name)}</div>
+            <div class="bet-meta">${h.name} · ${p.gorgees} gorgée${p.gorgees>1?"s":""}</div>
+          </div>
+          <button class="del" data-i="${i}" aria-label="Retirer">✕</button>`;
+        list.appendChild(row);
+      });
+      list.querySelectorAll(".del").forEach(b=>{
+        b.addEventListener("click", ()=>{ players.splice(+b.dataset.i,1); renderBets(); });
+      });
+    }
+    $("#startRace").disabled = players.length < 2;
+    renderStable();
+  }
+
+  $("#startRace").addEventListener("click", startRace);
+
+  // ---------- ÉCRAN 2 : COURSE ----------
+  function buildDeck(){
+    deck = [];
+    HORSES.forEach(h=>{
+      RANKS.forEach(r=> deck.push({suit:h.suit, horse:h.id, rank:r, pip:h.pip, color:h.color}));
+    });
+    // mélange Fisher-Yates
+    for(let i=deck.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [deck[i],deck[j]]=[deck[j],deck[i]];
+    }
+  }
+
+  function startRace(){
+    positions=[0,0,0,0];
+    winner=null; raceOver=false; drawing=false;
+    buildDeck();
+    buildCheckpoints();
+    renderTrack();
+    renderTote();
+    renderEtages();
+    $("#announce").classList.remove("show");
+    $("#card").classList.remove("flipped");
+    $("#drawBtn").disabled=false;
+    $("#drawBtn").textContent="Tirer une carte";
+    setAuto(false);
+    show("course");
+    window.scrollTo({top:0});
+  }
+
+  function renderTrack(){
+    const track = $("#track");
+    track.innerHTML = "";
+    HORSES.forEach(h=>{
+      const lane = document.createElement("div");
+      lane.className="lane";
+      let furl="<div class='furlongs'>";
+      for(let i=0;i<finishSteps;i++) furl+="<span></span>";
+      furl+="</div>";
+      lane.innerHTML = furl + `
+        <div class="horse" id="horse-${h.id}">
+          <div class="silk" style="background:${h.color}">
+            <span class="num">${h.num}</span>${h.pip}
+          </div>
+          <span class="emoji">${h.emoji}</span>
+        </div>`;
+      track.appendChild(lane);
+    });
+    updateHorses(false);
+  }
+
+  function updateHorses(animateBob){
+    const trackW = $("#track").clientWidth;
+    HORSES.forEach(h=>{
+      const el = document.getElementById("horse-"+h.id);
+      if(!el) return;
+      const usable = trackW - 110;           // marge silk + poteau arrivée
+      const left = 6 + (positions[h.id]/finishSteps)*usable;
+      el.style.left = left+"px";
+    });
+  }
+
+  function renderTote(){
+    const tote = $("#tote");
+    tote.innerHTML = "";
+    HORSES.forEach(h=>{
+      const c=document.createElement("div");
+      c.className="cell";
+      c.innerHTML = `<div class="pos" style="color:${h.color}">${positions[h.id]}</div>
+                     <div class="lbl">${h.num} ${h.name}</div>`;
+      tote.appendChild(c);
+    });
+  }
+
+  // ---- Étages (cartes de recul) ----
+  function buildCheckpoints(){
+    checkpoints = [];
+    // un étage par niveau intermédiaire ; la carte est tirée du jeu (comme au vrai PMU)
+    for(let lv=1; lv<=finishSteps-1; lv++){
+      const card = deck.length ? deck.pop() : {horse:Math.floor(Math.random()*HORSES.length)};
+      checkpoints.push({level:lv, horse:card.horse, revealed:false});
+    }
+  }
+
+  function renderEtages(){
+    const box = $("#etages");
+    box.innerHTML = "";
+    checkpoints.forEach(cp=>{
+      const h = HORSES[cp.horse];
+      const d = document.createElement("div");
+      d.className = "etage" + (cp.revealed ? " revealed" : "");
+      d.innerHTML = `<span class="lv">Étage ${cp.level}</span>` +
+                    (cp.revealed ? `<span style="color:${h.color}">${h.pip}</span>` : "?");
+      box.appendChild(d);
+    });
+  }
+
+  let announceTimer = null;
+  function announce(msg){
+    const a = $("#announce");
+    a.textContent = msg;
+    a.classList.add("show");
+    if(announceTimer) clearTimeout(announceTimer);
+    announceTimer = setTimeout(()=> a.classList.remove("show"), 2400);
+  }
+
+  // déclenche le recul dès que tous les chevaux ont franchi un étage
+  function checkCheckpoints(){
+    const minPos = Math.min(...positions);
+    checkpoints.forEach(cp=>{
+      if(!cp.revealed && minPos >= cp.level){
+        cp.revealed = true;
+        const h = HORSES[cp.horse];
+        positions[cp.horse] = Math.max(0, positions[cp.horse]-1);
+        const el = document.getElementById("horse-"+cp.horse);
+        if(el){ el.classList.add("recoil"); setTimeout(()=>el.classList.remove("recoil"),650); }
+        announce(`Étage ${cp.level} — ${h.name} recule d'une case !`);
+        updateHorses(true);
+        renderTote();
+        renderEtages();
+      }
+    });
+  }
+
+  const drawBtn = $("#drawBtn");
+  drawBtn.addEventListener("click", ()=>{ if(!autoMode) drawCard(); });
+
+  function drawCard(){
+    if(raceOver || drawing) return;
+    drawing = true;
+    if(deck.length===0) buildDeck();
+    const card = deck.pop();
+
+    // afficher la carte
+    const front = $("#cardFront");
+    front.style.color = card.color;
+    front.innerHTML = `<div class="rank">${card.rank}</div><div class="pip">${card.pip}</div>`;
+    const cardEl = $("#card");
+    cardEl.classList.remove("flipped");
+    // petit reflow pour rejouer le flip
+    void cardEl.offsetWidth;
+    cardEl.classList.add("flipped");
+
+    // faire avancer le cheval
+    const el = document.getElementById("horse-"+card.horse);
+    el.classList.add("running");
+
+    setTimeout(()=>{
+      positions[card.horse] = Math.min(finishSteps, positions[card.horse]+1);
+      updateHorses(true);
+      renderTote();
+      checkCheckpoints();
+    }, 240);
+
+    setTimeout(()=>{
+      el.classList.remove("running");
+      if(positions[card.horse] >= finishSteps){
+        finishRace(card.horse);
+      } else {
+        drawing = false;
+      }
+    }, 1150);
+  }
+
+  // mode auto
+  document.querySelectorAll(".pace button").forEach(b=>{
+    b.addEventListener("click", ()=> setAuto(b.dataset.mode==="auto"));
+  });
+  function setAuto(on){
+    autoMode = on;
+    document.querySelectorAll(".pace button").forEach(b=>{
+      b.classList.toggle("on", (b.dataset.mode==="auto")===on);
+    });
+    drawBtn.style.display = on ? "none" : "block";
+    if(autoTimer){ clearInterval(autoTimer); autoTimer=null; }
+    if(on && !raceOver){
+      autoTimer = setInterval(()=>{ if(!drawing && !raceOver) drawCard(); }, 1300);
+    }
+  }
+
+  // ---------- ÉCRAN 3 : ARRIVÉE ----------
+  function finishRace(horseId){
+    raceOver = true;
+    winner = horseId;
+    if(autoTimer){ clearInterval(autoTimer); autoTimer=null; }
+    drawBtn.disabled = true;
+    const wel = document.getElementById("horse-"+horseId);
+    if(wel) wel.classList.add("won");
+
+    setTimeout(()=>{
+      const h = HORSES[horseId];
+      $("#winSilk").style.background = h.color;
+      $("#winSilk").innerHTML = h.pip;
+      $("#winName").textContent = `N°${h.num} — ${h.name}`;
+
+      const winners = players.filter(p=>p.horse===horseId);
+      const losers  = players.filter(p=>p.horse!==horseId);
+      recordRace(horseId);
+      let html = "";
+
+      html += `<div class="grp"><div class="grp-t"><span class="pill win">Gagnants</span> distribuent leurs gorgées</div>`;
+      if(winners.length){
+        winners.forEach(p=>{
+          html += `<div class="res-row"><span class="who">${escapeHtml(p.name)}</span>
+                   <span class="amt win">+${p.gorgees} à distribuer</span></div>`;
+        });
+      } else {
+        html += `<div class="res-row" style="font-style:italic;color:var(--ink-soft)">Personne n'avait misé sur ce cheval… la maison rit.</div>`;
+      }
+      html += `</div>`;
+
+      html += `<div class="grp"><div class="grp-t"><span class="pill lose">Perdants</span> boivent leur mise</div>`;
+      if(losers.length){
+        losers.forEach(p=>{
+          const lh = HORSES[p.horse];
+          html += `<div class="res-row"><span class="who">${escapeHtml(p.name)} <span style="opacity:.6;font-weight:400">(${lh.name})</span></span>
+                   <span class="amt lose">${p.gorgees} gorgée${p.gorgees>1?"s":""}</span></div>`;
+        });
+      } else {
+        html += `<div class="res-row" style="font-style:italic;color:var(--ink-soft)">Tout le monde a gagné. Santé !</div>`;
+      }
+      html += `</div>`;
+
+      $("#results").innerHTML = html;
+      show("arrivee");
+      window.scrollTo({top:0});
+    }, 900);
+  }
+
+  $("#replay").addEventListener("click", ()=>{
+    // on garde les parieurs, on relance
+    show("accueil");
+    renderBets();
+    renderStable();
+    window.scrollTo({top:0});
+  });
+
+  // recalcul des positions si rotation/resize
+  window.addEventListener("resize", ()=>{ if(screens.course.style.display==="block") updateHorses(false); });
+
+  function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));}
+
+  /* ============================================================
+     PROFILS PERSISTANTS  (stockés dans le navigateur)
+     ============================================================ */
+  const STORE_KEY = "pmu_profiles_v1";
+
+  function loadProfiles(){
+    try{
+      const raw = localStorage.getItem(STORE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    }catch(e){ return {}; }
+  }
+  function saveProfiles(obj){
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(obj)); }catch(e){}
+  }
+  function profileKey(name){ return name.trim().toLowerCase(); }
+  function getProfile(name){
+    const p = loadProfiles();
+    return p[profileKey(name)] || null;
+  }
+  function blankProfile(name){
+    return {name:name, races:0, wins:0, distributed:0, drunk:0, horseBets:[0,0,0,0], last:0};
+  }
+
+  // met à jour les stats de tous les parieurs à la fin d'une course
+  function recordRace(winningHorse){
+    const store = loadProfiles();
+    players.forEach(p=>{
+      const k = profileKey(p.name);
+      const prof = store[k] || blankProfile(p.name);
+      prof.name = p.name;                 // garde la casse la plus récente
+      prof.races += 1;
+      prof.horseBets[p.horse] = (prof.horseBets[p.horse]||0) + 1;
+      if(p.horse === winningHorse){ prof.wins += 1; prof.distributed += p.gorgees; }
+      else { prof.drunk += p.gorgees; }
+      prof.last = Date.now();
+      store[k] = prof;
+    });
+    saveProfiles(store);
+  }
+
+  function favHorse(prof){
+    let max=-1, idx=-1;
+    prof.horseBets.forEach((n,i)=>{ if(n>max){ max=n; idx=i; } });
+    return max>0 ? idx : -1;
+  }
+
+  // ---- Écurie (liste des profils) ----
+  function renderStable(){
+    const store = loadProfiles();
+    const keys = Object.keys(store).sort((a,b)=> store[b].last - store[a].last);
+    const panel = $("#stablePanel");
+    const box = $("#stable");
+    if(keys.length === 0){ panel.style.display="none"; return; }
+    panel.style.display = "block";
+    box.innerHTML = "";
+    keys.forEach(k=>{
+      const prof = store[k];
+      const inRace = players.some(p=>profileKey(p.name)===k);
+      const fav = favHorse(prof);
+      const disc = fav>=0 ? HORSES[fav].color : "var(--ink-soft)";
+      const pip  = fav>=0 ? HORSES[fav].pip : "★";
+      const chip = document.createElement("div");
+      chip.className = "prof" + (inRace?" inrace":"");
+      chip.innerHTML = `
+        <div class="pdisc" style="background:${disc}">${pip}</div>
+        <div class="pinfo">
+          <div class="pn">${escapeHtml(prof.name)}</div>
+          <div class="ps">🏆 ${prof.wins} / ${prof.races} course${prof.races>1?"s":""}</div>
+        </div>
+        <button class="pi" aria-label="Stats">ⓘ</button>`;
+      // tap sur le corps = inscrire vite ; tap sur ⓘ = stats
+      chip.addEventListener("click", e=>{
+        if(e.target.classList.contains("pi")){ openStats(prof.name); return; }
+        if(inRace) return;
+        nameInput.value = prof.name;
+        openBetForm();
+      });
+      box.appendChild(chip);
+    });
+  }
+
+  // ---- Modale stats ----
+  const modal = $("#statsModal");
+  let modalName = null;
+
+  function openStats(name){
+    const prof = getProfile(name);
+    if(!prof) return;
+    modalName = name;
+    const fav = favHorse(prof);
+    const rate = prof.races ? Math.round(prof.wins/prof.races*100) : 0;
+    $("#mName").textContent = prof.name;
+    const md = $("#mDisc");
+    md.style.background = fav>=0 ? HORSES[fav].color : "var(--turf)";
+    md.textContent = fav>=0 ? HORSES[fav].pip : "★";
+    $("#statGrid").innerHTML = `
+      <div class="stat"><div class="v">${prof.races}</div><div class="k">Courses</div></div>
+      <div class="stat"><div class="v">${prof.wins}</div><div class="k">Victoires</div></div>
+      <div class="stat"><div class="v">${rate}%</div><div class="k">Taux de victoire</div></div>
+      <div class="stat"><div class="v">${prof.distributed}</div><div class="k">Gorgées distribuées</div></div>
+      <div class="stat" style="grid-column:span 2"><div class="v">${prof.drunk}</div><div class="k">Gorgées bues</div></div>`;
+    const favBox = $("#mFav");
+    if(fav>=0){
+      favBox.style.display="flex";
+      favBox.innerHTML = `<div class="fdisc" style="background:${HORSES[fav].color}">${HORSES[fav].pip}</div>
+        <div>Cheval fétiche : <b>${HORSES[fav].name}</b></div>`;
+    } else { favBox.style.display="none"; }
+    modal.classList.add("open");
+  }
+  function closeStats(){ modal.classList.remove("open"); modalName=null; }
+
+  $("#statsClose").addEventListener("click", closeStats);
+  modal.addEventListener("click", e=>{ if(e.target===modal) closeStats(); });
+  $("#mEnroll").addEventListener("click", ()=>{
+    if(!modalName) return;
+    if(players.some(p=>profileKey(p.name)===profileKey(modalName))){ closeStats(); return; }
+    nameInput.value = modalName;
+    closeStats();
+    openBetForm();
+  });
+  $("#mDelete").addEventListener("click", ()=>{
+    if(!modalName) return;
+    if(!confirm(`Supprimer le profil de ${modalName} ? Les stats seront perdues.`)) return;
+    const store = loadProfiles();
+    delete store[profileKey(modalName)];
+    saveProfiles(store);
+    closeStats();
+    renderStable();
+  });
+
+  // ---- Distance de la course ----
+  function renderDist(){
+    const box = $("#distPick");
+    box.innerHTML = "";
+    for(let n=FINISH_MIN; n<=FINISH_MAX; n++){
+      const d = document.createElement("div");
+      d.className = "dist-opt" + (n===finishSteps?" sel":"");
+      d.textContent = n;
+      d.addEventListener("click", ()=>{ finishSteps = n; renderDist(); });
+      box.appendChild(d);
+    }
+    $("#distHint").innerHTML =
+      `<b>${finishSteps} cases</b> à franchir · ${finishSteps-1} étage${finishSteps-1>1?"s":""} de recul.<br>` +
+      `Maximum ${FINISH_MAX} : au-delà, un jeu de 52 cartes ne suffit plus à garantir une arrivée.`;
+  }
+
+  // init
+  renderBets();
+  renderStable();
+  renderDist();
+  nameInput.focus();
+})();
+</script>
+</body>
+</html>
