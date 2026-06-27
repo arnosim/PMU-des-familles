@@ -1,0 +1,16 @@
+{
+  "name": "Le PMU — Course à boire",
+  "short_name": "Le PMU",
+  "description": "La course de chevaux à boire, en version web. Misez vos gorgées, tirez les cartes, gardez vos profils.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#163a2d",
+  "theme_color": "#163a2d",
+  "lang": "fr",
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

@@ -9,6 +9,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Le PMU">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Crect%20width='100'%20height='100'%20rx='22'%20fill='%23163a2d'/%3E%3Ctext%20x='50'%20y='52'%20font-size='58'%20text-anchor='middle'%20dominant-baseline='central'%3E%F0%9F%90%8E%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -317,6 +319,87 @@
     padding:11px 0;text-align:center;font-family:'Space Mono';font-weight:700;font-size:17px;color:var(--ink);transition:.1s;}
   .dist-opt.sel{border-color:var(--gold-deep);background:#fff7e2;}
   .dist-hint{font-size:12px;color:var(--ink-soft);margin-top:10px;line-height:1.5;}
+
+  /* carte règles */
+  .rules{background:linear-gradient(180deg,#1c4a39,#163a2d);border:1.5px solid var(--gold-deep);
+    border-radius:14px;margin-bottom:16px;overflow:hidden;box-shadow:var(--shadow);}
+  .rules-head{display:flex;align-items:center;gap:10px;padding:15px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+  .rules-head .ico{font-size:19px;}
+  .rules-head h3{font-family:'Oswald';text-transform:uppercase;font-size:15px;letter-spacing:.08em;
+    font-weight:600;flex:1;color:var(--gold);margin:0;}
+  .rules-head .chev{transition:transform .25s;color:var(--cream);font-size:13px;opacity:.8;}
+  .rules.open .rules-head .chev{transform:rotate(180deg);}
+  .rules-body{display:none;padding:0 16px 14px;}
+  .rules.open .rules-body{display:block;}
+  .step{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid rgba(255,255,255,.1);}
+  .step .si{width:34px;height:34px;border-radius:9px;background:rgba(230,184,76,.16);display:grid;
+    place-items:center;font-size:17px;flex-shrink:0;}
+  .step .st{font-size:13px;line-height:1.45;color:var(--cream);}
+  .step .st b{color:var(--gold);}
+
+  /* inscription inline */
+  .preg-row{background:var(--white);border:1.5px solid #e2d6b6;border-radius:12px;padding:12px;
+    margin-bottom:10px;transition:border-color .2s;}
+  .preg-row.nobet{border-color:var(--gold-deep);}
+  .preg-top{display:flex;align-items:center;gap:10px;margin-bottom:11px;}
+  .preg-name{font-weight:600;font-size:16px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;
+    white-space:nowrap;color:var(--ink);}
+  .preg-ctrl{display:flex;align-items:center;gap:10px;}
+  .preg-silks{display:flex;gap:7px;flex:1;min-width:0;}
+  .preg-silk{flex:1;height:42px;border-radius:9px;border:2px solid transparent;display:grid;place-items:center;
+    font-size:19px;color:#fff;cursor:pointer;opacity:.38;transition:.12s;position:relative;
+    -webkit-tap-highlight-color:transparent;}
+  .preg-silk.sel{opacity:1;border-color:#fff;box-shadow:0 0 0 2px var(--gold);}
+  .preg-silk .pn{position:absolute;top:-6px;left:-4px;width:15px;height:15px;border-radius:50%;background:var(--gold);
+    color:var(--ink);font-family:'Space Mono';font-size:9px;font-weight:700;display:grid;place-items:center;}
+  .mini-step{display:flex;align-items:center;border:1.5px solid #d8cba9;border-radius:9px;overflow:hidden;flex-shrink:0;}
+  .mini-step button{width:32px;height:38px;border:none;background:var(--white);font-size:18px;font-family:'Oswald';cursor:pointer;color:var(--ink);}
+  .mini-step button:active{background:#f0e6c8;}
+  .mini-step .mv{width:26px;text-align:center;font-family:'Space Mono';font-weight:700;font-size:15px;}
+  .mini-step .gl{font-size:8px;color:var(--ink-soft);padding:0 7px 0 3px;text-transform:uppercase;letter-spacing:.04em;}
+
+  /* presets de distance */
+  .preset-pick{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
+  .preset{border:2px solid #d8cba9;border-radius:11px;background:var(--white);cursor:pointer;padding:12px 6px;
+    text-align:center;transition:.12s;-webkit-tap-highlight-color:transparent;}
+  .preset.sel{border-color:var(--gold-deep);background:#fff7e2;}
+  .preset .pt{font-family:'Oswald';text-transform:uppercase;font-weight:700;font-size:15px;color:var(--ink);}
+  .preset .pc{font-family:'Space Mono';font-size:11px;color:var(--ink-soft);margin-top:3px;}
+
+  /* grille de départ (cotes) */
+  #screen-grille{display:none;}
+  .screen-title{font-family:'Oswald';text-transform:uppercase;text-align:center;letter-spacing:.1em;
+    font-size:19px;margin:4px 0 2px;}
+  .screen-sub{text-align:center;color:var(--cream);opacity:.8;font-size:13px;margin-bottom:14px;}
+  .grille-card{background:var(--paper);border-radius:14px;padding:6px;box-shadow:var(--shadow);
+    border:1px solid rgba(0,0,0,.08);margin-bottom:16px;}
+  .cote-row{display:flex;align-items:center;gap:12px;padding:13px 12px;border-radius:11px;margin:6px;
+    background:var(--white);border:1px solid #e2d6b6;position:relative;}
+  .cote-row.fav{border-color:var(--gold);background:#fff7e2;}
+  .cote-silk{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:22px;color:#fff;
+    flex-shrink:0;box-shadow:inset 0 -4px 8px rgba(0,0,0,.2);}
+  .cote-info{flex:1;min-width:0;color:var(--ink);}
+  .cote-name{font-family:'Oswald';text-transform:uppercase;font-weight:600;font-size:16px;}
+  .cote-sub{font-size:12px;color:var(--ink-soft);}
+  .cote-odds{font-family:'Space Mono';font-weight:700;font-size:20px;text-align:right;color:var(--ink);}
+  .fav-badge{position:absolute;top:-8px;right:10px;background:var(--gold);color:var(--ink);font-family:'Oswald';
+    font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:2px 8px;border-radius:10px;}
+
+  /* podium de soirée */
+  #screen-podium{display:none;text-align:center;}
+  .section-t{font-family:'Oswald';text-transform:uppercase;letter-spacing:.1em;font-size:13px;
+    color:var(--cream);opacity:.85;margin:0 0 10px;text-align:left;}
+  .podium-wrap{display:flex;justify-content:center;align-items:flex-end;gap:8px;margin:6px 0 18px;}
+  .pod{background:var(--paper);color:var(--ink);border-radius:12px;padding:12px 6px;flex:1;max-width:118px;
+    box-shadow:var(--shadow);border:1px solid rgba(0,0,0,.08);}
+  .pod.p1{border:2px solid var(--gold);transform:translateY(-12px);}
+  .pod .medal{font-size:28px;line-height:1;}
+  .pod .pname{font-family:'Oswald';text-transform:uppercase;font-weight:600;font-size:14px;margin:6px 0 2px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .pod .pamt{font-family:'Space Mono';font-weight:700;font-size:13px;color:#b5462f;}
+  .pod-extra{background:#1c4a39;color:var(--cream);border-radius:11px;padding:12px 14px;margin-bottom:16px;
+    font-size:13px;text-align:center;}
+  .pod-extra b{color:var(--gold);}
 </style>
 </head>
 <body>
@@ -331,50 +414,60 @@
   <!-- ============ ÉCRAN 1 : GUICHET ============ -->
   <section id="screen-accueil">
 
+    <!-- règles -->
+    <div class="rules" id="rules">
+      <div class="rules-head" id="rulesHead">
+        <span class="ico">📖</span>
+        <h3>Comment on joue ?</h3>
+        <span class="chev">▾</span>
+      </div>
+      <div class="rules-body">
+        <div class="step"><div class="si">🎫</div><div class="st"><b>Mise.</b> Chaque joueur choisit une couleur — c'est son cheval — et met des gorgées en jeu.</div></div>
+        <div class="step"><div class="si">🃏</div><div class="st"><b>La course.</b> On tire des cartes : à chaque couleur tirée, le cheval de cette couleur avance d'une case.</div></div>
+        <div class="step"><div class="si">⬇️</div><div class="st"><b>Les étages.</b> Quand tous les chevaux ont passé un étage, sa carte se retourne et ce cheval recule d'une case.</div></div>
+        <div class="step"><div class="si">🏁</div><div class="st"><b>L'arrivée.</b> Premier à la ligne : ceux qui avaient parié sur lui distribuent leurs gorgées, les autres boivent les leurs.</div></div>
+      </div>
+    </div>
+
     <div class="panel" id="stablePanel" style="display:none;">
       <h2><span class="n">★</span>L'écurie</h2>
       <div class="stable" id="stable"></div>
     </div>
 
     <div class="panel">
-      <h2><span class="n">1</span>Inscrivez les parieurs</h2>
+      <h2><span class="n">1</span>Qui joue ?</h2>
       <div class="field-row">
         <div>
           <label for="pname">Prénom</label>
           <input type="text" id="pname" placeholder="ex. Arno" autocomplete="off" maxlength="14">
         </div>
-        <button class="btn btn-add" id="openBet">Ajouter</button>
+        <button class="btn btn-add" id="addBtn">Ajouter</button>
       </div>
       <div class="err" id="err"></div>
     </div>
 
-    <!-- formulaire de pari (masqué par défaut) -->
-    <div class="panel" id="betPanel" style="display:none;">
-      <h2><span class="n">2</span>Pari de <span id="curName" style="color:var(--ink);margin-left:4px;">—</span></h2>
-      <label>Sur quel cheval ?</label>
-      <div class="silk-pick" id="silkPick"></div>
-      <label>Combien de gorgées en jeu ?</label>
-      <div class="stepper">
-        <button id="gMinus">–</button>
-        <div class="val" id="gVal">3</div>
-        <button id="gPlus">+</button>
-      </div>
-      <div style="height:14px"></div>
-      <button class="btn btn-gold" id="confirmBet">Valider le ticket</button>
+    <div class="panel">
+      <h2><span class="n">2</span>Les parieurs</h2>
+      <div id="roster"><div class="players-empty">Personne pour l'instant. Ajoutez au moins 2 joueurs, puis chacun tape sa couleur.</div></div>
     </div>
 
     <div class="panel">
-      <h2><span class="n">3</span>Les tickets</h2>
-      <div id="betList"><div class="players-empty">Aucun pari pour l'instant. Inscrivez au moins 2 parieurs.</div></div>
-    </div>
-
-    <div class="panel">
-      <h2><span class="n">4</span>Distance de la course</h2>
-      <div class="dist-pick" id="distPick"></div>
+      <h2><span class="n">3</span>Distance</h2>
+      <div class="preset-pick" id="presetPick"></div>
       <div class="dist-hint" id="distHint"></div>
     </div>
 
     <button class="btn btn-gold" id="startRace" disabled>Lancer la course</button>
+    <button class="btn btn-ghost" id="goPodium" style="display:none;width:fit-content;margin:14px auto 0;">🏆 Podium de la soirée</button>
+  </section>
+
+  <!-- ============ GRILLE DE DÉPART (cotes) ============ -->
+  <section id="screen-grille">
+    <div class="screen-title">Grille de départ</div>
+    <div class="screen-sub">Les cotes juste avant le top départ</div>
+    <div class="grille-card" id="grille"></div>
+    <button class="btn btn-gold" id="goRace">Top départ !</button>
+    <button class="btn btn-ghost" id="backToAccueil" style="margin-top:10px;">Modifier les paris</button>
   </section>
 
   <!-- ============ ÉCRAN 2 : LA COURSE ============ -->
@@ -410,6 +503,18 @@
     </div>
     <div class="result-list" id="results"></div>
     <button class="btn btn-gold" id="replay" style="margin-top:6px;">Nouvelle course</button>
+    <button class="btn btn-ghost" id="seePodium" style="width:fit-content;margin:14px auto 0;">🏆 Podium de la soirée</button>
+  </section>
+
+  <!-- ============ PODIUM DE SOIRÉE ============ -->
+  <section id="screen-podium">
+    <div class="screen-title">Podium de la soirée</div>
+    <div class="screen-sub">Le classement depuis le début de la session</div>
+    <div class="section-t">🍺 Les plus arrosés</div>
+    <div class="podium-wrap" id="podiumTop"></div>
+    <div class="pod-extra" id="podBest"></div>
+    <div class="result-list" id="podiumList" style="text-align:left;"></div>
+    <button class="btn btn-gold" id="podReplay" style="margin-top:14px;">Nouvelle course</button>
   </section>
 
   <div class="announce" id="announce"></div>
@@ -453,7 +558,7 @@
   let finishSteps = 6;         // cases à franchir pour gagner (réglable)
   const RANKS = ["2","3","4","5","6","7","8","9","10","V","D","R"]; // sans l'As (= les chevaux)
 
-  let players = [];            // {name, horse, gorgees}
+  let players = [];            // {name, horse:null|0-3, gorgees}
   let positions = [0,0,0,0];
   let checkpoints = [];        // {level, horse, revealed}
   let deck = [];
@@ -462,101 +567,96 @@
   let autoMode = false;
   let autoTimer = null;
   let drawing = false;
-
-  // ---- Sélection en cours (formulaire de pari) ----
-  let pendingName = "";
-  let selHorse = null;
-  let gorgees = 3;
+  let sessionStats = {};       // stats de la soirée (en mémoire) {key:{name,races,wins,drunk,distributed}}
 
   const $ = s => document.querySelector(s);
   const screens = {
     accueil: $("#screen-accueil"),
+    grille:  $("#screen-grille"),
     course:  $("#screen-course"),
     arrivee: $("#screen-arrivee"),
+    podium:  $("#screen-podium"),
   };
   function show(name){
     Object.values(screens).forEach(s=>s.style.display="none");
-    screens[name].style.display = (name==="course")?"block":(name==="arrivee"?"block":"block");
+    screens[name].style.display = "block";
   }
 
-  // ---------- ÉCRAN 1 ----------
+  // ---------- ÉCRAN 1 : INSCRIPTION INLINE ----------
   const nameInput = $("#pname");
   const errBox = $("#err");
-
   function showError(msg){ errBox.textContent = msg; }
 
-  $("#openBet").addEventListener("click", openBetForm);
-  nameInput.addEventListener("keydown", e=>{ if(e.key==="Enter") openBetForm(); });
-
-  function openBetForm(){
+  function addPlayer(){
     const nm = nameInput.value.trim();
     if(!nm){ showError("Entrez un prénom."); return; }
     if(players.some(p=>p.name.toLowerCase()===nm.toLowerCase())){
       showError("Ce prénom est déjà inscrit."); return;
     }
     showError("");
-    pendingName = nm;
-    selHorse = null;
-    gorgees = 3;
-    $("#curName").textContent = nm;
-    $("#gVal").textContent = gorgees;
-    renderSilkPick();
-    $("#betPanel").style.display = "block";
-    $("#betPanel").scrollIntoView({behavior:"smooth", block:"nearest"});
-  }
-
-  function renderSilkPick(){
-    const box = $("#silkPick");
-    box.innerHTML = "";
-    HORSES.forEach(h=>{
-      const d = document.createElement("div");
-      d.className = "silk-opt" + (selHorse===h.id?" sel":"");
-      d.innerHTML = `<div class="disc" style="background:${h.color}">${h.pip}</div><div class="nm">${h.name}</div>`;
-      d.addEventListener("click", ()=>{ selHorse = h.id; renderSilkPick(); });
-      box.appendChild(d);
-    });
-  }
-
-  $("#gMinus").addEventListener("click", ()=>{ gorgees=Math.max(1,gorgees-1); $("#gVal").textContent=gorgees; });
-  $("#gPlus").addEventListener("click",  ()=>{ gorgees=Math.min(10,gorgees+1); $("#gVal").textContent=gorgees; });
-
-  $("#confirmBet").addEventListener("click", ()=>{
-    if(selHorse===null){ showError("Choisissez un cheval."); return; }
-    players.push({name:pendingName, horse:selHorse, gorgees:gorgees});
+    players.push({name:nm, horse:null, gorgees:3});
     nameInput.value = "";
-    $("#betPanel").style.display = "none";
-    renderBets();
+    renderRoster();
     nameInput.focus();
-  });
+  }
+  // ajout direct depuis l'écurie / la modale (sans repasser par le champ)
+  function addNamed(nm){
+    if(players.some(p=>p.name.toLowerCase()===nm.toLowerCase())) return;
+    players.push({name:nm, horse:null, gorgees:3});
+    renderRoster();
+  }
 
-  function renderBets(){
-    const list = $("#betList");
+  $("#addBtn").addEventListener("click", addPlayer);
+  nameInput.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); addPlayer(); } });
+
+  function canStart(){ return players.length>=2 && players.every(p=>p.horse!==null); }
+
+  function renderRoster(){
+    const list = $("#roster");
     if(players.length===0){
-      list.innerHTML = `<div class="players-empty">Aucun pari pour l'instant. Inscrivez au moins 2 parieurs.</div>`;
+      list.innerHTML = `<div class="players-empty">Personne pour l'instant. Ajoutez au moins 2 joueurs, puis chacun tape sa couleur.</div>`;
     } else {
       list.innerHTML = "";
       players.forEach((p,i)=>{
-        const h = HORSES[p.horse];
         const row = document.createElement("div");
-        row.className = "bet-row";
+        row.className = "preg-row" + (p.horse===null ? " nobet" : "");
+        const silks = HORSES.map(h=>
+          `<div class="preg-silk${p.horse===h.id?' sel':''}" style="background:${h.color}" data-h="${h.id}">
+             <span class="pn">${h.num}</span>${h.pip}
+           </div>`).join("");
         row.innerHTML = `
-          <div class="bet-silk" style="background:${h.color}">${h.pip}</div>
-          <div style="flex:1;min-width:0">
-            <div class="bet-name">${escapeHtml(p.name)}</div>
-            <div class="bet-meta">${h.name} · ${p.gorgees} gorgée${p.gorgees>1?"s":""}</div>
+          <div class="preg-top">
+            <div class="preg-name">${escapeHtml(p.name)}</div>
+            <button class="del" data-del aria-label="Retirer">✕</button>
           </div>
-          <button class="del" data-i="${i}" aria-label="Retirer">✕</button>`;
+          <div class="preg-ctrl">
+            <div class="preg-silks">${silks}</div>
+            <div class="mini-step">
+              <button data-g="-">–</button>
+              <div class="mv">${p.gorgees}</div>
+              <button data-g="+">+</button>
+              <span class="gl">gorgées</span>
+            </div>
+          </div>`;
+        row.querySelectorAll(".preg-silk").forEach(s=>{
+          s.addEventListener("click", ()=>{ players[i].horse = +s.dataset.h; renderRoster(); });
+        });
+        row.querySelectorAll("[data-g]").forEach(b=>{
+          b.addEventListener("click", ()=>{
+            if(b.dataset.g==="-") players[i].gorgees = Math.max(1, players[i].gorgees-1);
+            else players[i].gorgees = Math.min(10, players[i].gorgees+1);
+            renderRoster();
+          });
+        });
+        row.querySelector("[data-del]").addEventListener("click", ()=>{ players.splice(i,1); renderRoster(); });
         list.appendChild(row);
       });
-      list.querySelectorAll(".del").forEach(b=>{
-        b.addEventListener("click", ()=>{ players.splice(+b.dataset.i,1); renderBets(); });
-      });
     }
-    $("#startRace").disabled = players.length < 2;
+    $("#startRace").disabled = !canStart();
     renderStable();
   }
 
-  $("#startRace").addEventListener("click", startRace);
+  $("#startRace").addEventListener("click", ()=>{ if(canStart()) showGrille(); });
 
   // ---------- ÉCRAN 2 : COURSE ----------
   function buildDeck(){
@@ -571,7 +671,39 @@
     }
   }
 
-  function startRace(){
+  // ---------- GRILLE DE DÉPART (cotes) ----------
+  function showGrille(){
+    renderGrille();
+    show("grille");
+    window.scrollTo({top:0});
+  }
+  function renderGrille(){
+    const pot = HORSES.map(()=>({g:0,n:0}));
+    players.forEach(p=>{ pot[p.horse].g += p.gorgees; pot[p.horse].n += 1; });
+    const maxG = Math.max(...pot.map(x=>x.g));
+    const order = HORSES.slice().sort((a,b)=> pot[b.id].g - pot[a.id].g);
+    const box = $("#grille");
+    box.innerHTML = "";
+    order.forEach(h=>{
+      const o = pot[h.id];
+      const isFav = o.g>0 && o.g===maxG;
+      const row = document.createElement("div");
+      row.className = "cote-row" + (isFav ? " fav" : "");
+      row.innerHTML = `
+        ${isFav ? '<span class="fav-badge">Favori</span>' : ''}
+        <div class="cote-silk" style="background:${h.color}">${h.pip}</div>
+        <div class="cote-info">
+          <div class="cote-name">${h.name}</div>
+          <div class="cote-sub">${o.n} parieur${o.n>1?'s':''}</div>
+        </div>
+        <div class="cote-odds">${o.g}<span style="font-size:11px;opacity:.55"> g</span></div>`;
+      box.appendChild(row);
+    });
+  }
+  $("#goRace").addEventListener("click", beginRace);
+  $("#backToAccueil").addEventListener("click", ()=>{ show("accueil"); window.scrollTo({top:0}); });
+
+  function beginRace(){
     positions=[0,0,0,0];
     winner=null; raceOver=false; drawing=false;
     buildDeck();
@@ -788,11 +920,8 @@
   }
 
   $("#replay").addEventListener("click", ()=>{
-    // on garde les parieurs, on relance
-    show("accueil");
-    renderBets();
-    renderStable();
-    window.scrollTo({top:0});
+    // on garde les parieurs (et leurs paris), on relance
+    backToAccueil();
   });
 
   // recalcul des positions si rotation/resize
@@ -836,9 +965,56 @@
       else { prof.drunk += p.gorgees; }
       prof.last = Date.now();
       store[k] = prof;
+
+      // stats de la soirée (mémoire, repart à zéro au rechargement)
+      const s = sessionStats[k] || {name:p.name, races:0, wins:0, drunk:0, distributed:0};
+      s.name = p.name; s.races += 1;
+      if(p.horse === winningHorse){ s.wins += 1; s.distributed += p.gorgees; }
+      else { s.drunk += p.gorgees; }
+      sessionStats[k] = s;
     });
     saveProfiles(store);
+    refreshSessionUI();
   }
+
+  // ---------- PODIUM DE SOIRÉE ----------
+  function hasSession(){ return Object.keys(sessionStats).length > 0; }
+  function refreshSessionUI(){ $("#goPodium").style.display = hasSession() ? "block" : "none"; }
+
+  function renderPodium(){
+    const arr = Object.values(sessionStats);
+    const byDrunk = arr.slice().sort((a,b)=> b.drunk - a.drunk || b.races - a.races);
+    const top = byDrunk.slice(0,3);
+    const medals = ["🥇","🥈","🥉"];
+    // ordre d'affichage : 2e, 1er, 3e (1er au centre, surélevé)
+    const slots = [];
+    if(top[1]) slots.push({p:top[1], rank:1, cls:"p2"});
+    if(top[0]) slots.push({p:top[0], rank:0, cls:"p1"});
+    if(top[2]) slots.push({p:top[2], rank:2, cls:"p3"});
+    $("#podiumTop").innerHTML = slots.map(s=>`
+      <div class="pod ${s.cls}">
+        <div class="medal">${medals[s.rank]}</div>
+        <div class="pname">${escapeHtml(s.p.name)}</div>
+        <div class="pamt">${s.p.drunk} gorgée${s.p.drunk>1?"s":""}</div>
+      </div>`).join("");
+
+    const byWins = arr.slice().sort((a,b)=> b.wins - a.wins || (b.wins/b.races)-(a.wins/a.races));
+    const best = byWins[0];
+    $("#podBest").innerHTML = (best && best.wins>0)
+      ? `🏆 Meilleur parieur : <b>${escapeHtml(best.name)}</b> — ${best.wins} victoire${best.wins>1?"s":""}`
+      : `Pas encore de vainqueur ce soir.`;
+
+    $("#podiumList").innerHTML =
+      `<div class="section-t">Classement complet (gorgées bues)</div>` +
+      byDrunk.map((p,i)=>`<div class="res-row"><span class="who">${i+1}. ${escapeHtml(p.name)}</span>
+        <span class="amt lose">${p.drunk} gorgée${p.drunk>1?"s":""}</span></div>`).join("");
+  }
+  function showPodium(){ renderPodium(); show("podium"); window.scrollTo({top:0}); }
+
+  function backToAccueil(){ show("accueil"); renderRoster(); refreshSessionUI(); window.scrollTo({top:0}); }
+  $("#seePodium").addEventListener("click", showPodium);
+  $("#goPodium").addEventListener("click", showPodium);
+  $("#podReplay").addEventListener("click", backToAccueil);
 
   function favHorse(prof){
     let max=-1, idx=-1;
@@ -874,8 +1050,7 @@
       chip.addEventListener("click", e=>{
         if(e.target.classList.contains("pi")){ openStats(prof.name); return; }
         if(inRace) return;
-        nameInput.value = prof.name;
-        openBetForm();
+        addNamed(prof.name);
       });
       box.appendChild(chip);
     });
@@ -915,10 +1090,8 @@
   modal.addEventListener("click", e=>{ if(e.target===modal) closeStats(); });
   $("#mEnroll").addEventListener("click", ()=>{
     if(!modalName) return;
-    if(players.some(p=>profileKey(p.name)===profileKey(modalName))){ closeStats(); return; }
-    nameInput.value = modalName;
+    addNamed(modalName);
     closeStats();
-    openBetForm();
   });
   $("#mDelete").addEventListener("click", ()=>{
     if(!modalName) return;
@@ -930,28 +1103,54 @@
     renderStable();
   });
 
-  // ---- Distance de la course ----
+  // ---- Distance de la course (presets nommés) ----
+  const PRESETS = [
+    {label:"Rapide",    steps:4},
+    {label:"Classique", steps:6},
+    {label:"Marathon",  steps:9},
+  ];
   function renderDist(){
-    const box = $("#distPick");
+    const box = $("#presetPick");
     box.innerHTML = "";
-    for(let n=FINISH_MIN; n<=FINISH_MAX; n++){
+    PRESETS.forEach(pr=>{
       const d = document.createElement("div");
-      d.className = "dist-opt" + (n===finishSteps?" sel":"");
-      d.textContent = n;
-      d.addEventListener("click", ()=>{ finishSteps = n; renderDist(); });
+      d.className = "preset" + (pr.steps===finishSteps ? " sel" : "");
+      d.innerHTML = `<div class="pt">${pr.label}</div><div class="pc">${pr.steps} cases</div>`;
+      d.addEventListener("click", ()=>{ finishSteps = pr.steps; renderDist(); });
       box.appendChild(d);
-    }
+    });
     $("#distHint").innerHTML =
-      `<b>${finishSteps} cases</b> à franchir · ${finishSteps-1} étage${finishSteps-1>1?"s":""} de recul.<br>` +
-      `Maximum ${FINISH_MAX} : au-delà, un jeu de 52 cartes ne suffit plus à garantir une arrivée.`;
+      `<b>${finishSteps} cases</b> · ${finishSteps-1} étage${finishSteps-1>1?"s":""} de recul. ` +
+      `Marathon (9) est le maximum tenable avec un jeu de 52 cartes.`;
   }
 
+  // ---- Carte règles (ouverte à la première visite seulement) ----
+  const RULES_KEY = "pmu_seen_rules_v1";
+  (function initRules(){
+    let seen=false;
+    try{ seen = localStorage.getItem(RULES_KEY)==="1"; }catch(e){}
+    if(!seen){
+      $("#rules").classList.add("open");
+      try{ localStorage.setItem(RULES_KEY,"1"); }catch(e){}
+    }
+  })();
+  $("#rulesHead").addEventListener("click", ()=> $("#rules").classList.toggle("open"));
+
   // init
-  renderBets();
+  renderRoster();
   renderStable();
   renderDist();
+  refreshSessionUI();
   nameInput.focus();
 })();
+</script>
+<script>
+  // Enregistrement du service worker (installation écran d'accueil + hors-ligne)
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
 </script>
 </body>
 </html>
