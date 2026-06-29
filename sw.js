@@ -1,5 +1,5 @@
 // Le PMU — service worker (offline + installable)
-const CACHE = 'le-pmu-v1';
+const CACHE = 'le-pmu-v7';
 const SHELL = [
   './',
   './index.html',

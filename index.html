@@ -17,27 +17,40 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --turf:#1c4a39;
-    --turf-deep:#163a2d;
-    --turf-lane:#235a45;
-    --turf-stripe:#27634c;
-    --rail:#9a6536;
-    --rail-light:#c08a52;
-    --rail-dark:#6f4724;
-    --gold:#e6b84c;
-    --gold-deep:#c69632;
-    --cream:#f4ecd6;
-    --paper:#fbf6e8;
-    --ink:#241a0f;
-    --ink-soft:#4a3a27;
-    --white:#fbf7ee;
-
+    /* fond (body) */
+    --bg-top:#2a6049; --bg-mid:#1c4a39; --bg-bottom:#163a2d;
+    /* texte posé sur le fond */
+    --on-bg:#fbf7ee; --on-bg-dim:rgba(251,247,238,.72);
+    /* surfaces sombres (tote, dos de carte, règles, étages, podium) */
+    --turf:#1c4a39; --turf-deep:#163a2d; --dark-deep:#0e2a20;
+    /* route / couloir */
+    --turf-lane:#235a45; --turf-stripe:#27634c; --lane-sep:rgba(0,0,0,.18);
+    /* bordure de piste */
+    --rail:#9a6536; --rail-light:#c08a52; --rail-dark:#6f4724;
+    /* accent */
+    --gold:#e6b84c; --gold-deep:#c69632;
+    /* papier / texte sombre */
+    --cream:#f4ecd6; --paper:#fbf6e8; --ink:#241a0f; --ink-soft:#4a3a27; --white:#fbf7ee;
+    /* enseignes (identiques aux deux thèmes) */
     --c1:#d6443b; /* coeur  - rouge */
     --c2:#e0a32e; /* carreau- or */
     --c3:#3d77b8; /* trefle - bleu */
     --c4:#9a5bb0; /* pique  - violet */
-
     --shadow: 0 8px 24px rgba(0,0,0,.28);
+    --brand:"PMU";
+  }
+
+  /* ====== Thème Tour de France (Summer édition) ====== */
+  body[data-theme="tdf"]{
+    --bg-top:#6cc0ee; --bg-mid:#9bd4f0; --bg-bottom:#f6e7a8;     /* ciel → tournesol */
+    --on-bg:#10374f; --on-bg-dim:rgba(16,55,79,.72);            /* texte foncé lisible */
+    --turf:#2b3440; --turf-deep:#1f2730; --dark-deep:#181f27;    /* panneaux ardoise */
+    --turf-lane:#3a4047; --turf-stripe:#434a52;                  /* bitume */
+    --lane-sep:rgba(255,255,255,.55);                            /* marquage blanc */
+    --rail:#cfd5db; --rail-light:#e8ebee; --rail-dark:#9aa3ad;   /* bord de route clair */
+    --gold:#f6d32d; --gold-deep:#e0b400;                         /* maillot jaune */
+    --cream:#eef3f8; --paper:#fcfdfe;
+    --brand:"TDF";
   }
 
   *{box-sizing:border-box;margin:0;padding:0}
@@ -45,8 +58,8 @@
   body{
     font-family:'Inter',system-ui,sans-serif;
     background:
-      radial-gradient(ellipse at 50% -10%, #2a6049 0%, var(--turf) 45%, var(--turf-deep) 100%);
-    color:var(--white);
+      radial-gradient(ellipse at 50% -10%, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-bottom) 100%);
+    color:var(--on-bg);
     min-height:100dvh;
     -webkit-font-smoothing:antialiased;
     padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
@@ -67,7 +80,7 @@
     text-transform:uppercase;letter-spacing:.01em;
     margin:4px 0 2px;
   }
-  h1 .sub{display:block;font-weight:400;font-size:.34em;letter-spacing:.42em;color:var(--cream);opacity:.8;margin-top:8px;}
+  h1 .sub{display:block;font-weight:400;font-size:.34em;letter-spacing:.42em;color:var(--on-bg-dim);margin-top:8px;}
   .rule{height:3px;width:64px;margin:14px auto 0;background:var(--gold);border-radius:2px;
     box-shadow:0 0 0 4px rgba(230,184,76,.15);}
 
@@ -107,7 +120,7 @@
   .btn-gold{background:linear-gradient(180deg,var(--gold),var(--gold-deep));color:var(--ink);
     box-shadow:0 4px 0 #9c7625, var(--shadow);width:100%;}
   .btn-gold:active{box-shadow:0 1px 0 #9c7625, var(--shadow);}
-  .btn-ghost{background:transparent;color:var(--cream);border:1.5px solid rgba(255,255,255,.35);}
+  .btn-ghost{background:transparent;color:var(--on-bg);border:1.5px solid var(--on-bg-dim);}
   .btn-add{background:var(--turf);color:var(--white);padding:12px 16px;}
   .btn:disabled{filter:grayscale(.6) opacity(.55);cursor:not-allowed;}
 
@@ -149,7 +162,7 @@
   /* ---------- Hippodrome ---------- */
   #screen-course{display:none;}
   .tote{
-    background:#0e2a20;border:2px solid var(--gold-deep);border-radius:12px;
+    background:var(--dark-deep);color:var(--cream);border:2px solid var(--gold-deep);border-radius:12px;
     padding:10px 12px;margin-bottom:14px;display:flex;justify-content:space-between;gap:6px;
     box-shadow:inset 0 0 24px rgba(0,0,0,.5);
   }
@@ -159,48 +172,50 @@
 
   .track{
     background:
-      repeating-linear-gradient(0deg, var(--turf-lane) 0, var(--turf-lane) calc(25% - 1px), rgba(0,0,0,.18) calc(25% - 1px), rgba(0,0,0,.18) 25%);
+      repeating-linear-gradient(0deg, var(--turf-lane) 0, var(--turf-lane) calc(25% - 1px), var(--lane-sep) calc(25% - 1px), var(--lane-sep) 25%);
     border:3px solid var(--rail);border-radius:12px;padding:0;overflow:hidden;
     box-shadow:var(--shadow), inset 0 0 30px rgba(0,0,0,.25);position:relative;
   }
-  .track::before{ /* poteau d'arrivée */
-    content:"";position:absolute;top:0;bottom:0;right:46px;width:8px;z-index:1;
-    background:repeating-linear-gradient(45deg,#fff 0 6px,#1a1a1a 6px 12px);
-    opacity:.85;
-  }
   .lane{height:74px;position:relative;display:flex;align-items:center;}
   .lane:nth-child(odd){background:rgba(255,255,255,.03);}
-  .lane .furlongs{position:absolute;inset:0;display:flex;justify-content:space-between;
-    padding:0 52px 0 8px;pointer-events:none;}
-  .lane .furlongs span{width:1px;background:rgba(255,255,255,.12);}
-  .horse{
-    position:absolute;left:6px;transition:left 1s cubic-bezier(.34,1.2,.64,1);
-    display:flex;align-items:center;gap:7px;z-index:2;will-change:left;
-  }
-  .horse .silk{
-    width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
-    font-size:24px;color:#fff;font-weight:700;
-    box-shadow:inset 0 -5px 9px rgba(0,0,0,.25), 0 4px 8px rgba(0,0,0,.35);
-    border:2px solid rgba(255,255,255,.55);
-  }
-  .horse .num{position:absolute;top:-7px;left:-7px;width:20px;height:20px;border-radius:50%;
-    background:var(--gold);color:var(--ink);font-family:'Space Mono';font-size:11px;font-weight:700;
+
+  /* rond fixe à la corde (départ) */
+  .startbox{flex:0 0 56px;width:56px;height:100%;display:grid;place-items:center;z-index:3;
+    border-right:2px solid rgba(0,0,0,.28);background:rgba(0,0,0,.10);}
+  .startbox .silk{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
+    font-size:21px;color:#fff;font-weight:700;position:relative;
+    box-shadow:inset 0 -4px 8px rgba(0,0,0,.25), 0 3px 6px rgba(0,0,0,.35);
+    border:2px solid rgba(255,255,255,.55);}
+  .startbox .num{position:absolute;top:-7px;left:-7px;width:19px;height:19px;border-radius:50%;
+    background:var(--gold);color:var(--ink);font-family:'Space Mono';font-size:10px;font-weight:700;
     display:grid;place-items:center;border:1.5px solid #fff;}
-  .horse .emoji{font-size:26px;filter:drop-shadow(0 3px 3px rgba(0,0,0,.4));}
-  .horse.running{animation:gallop .35s ease-in-out infinite;}
+
+  /* cases égales */
+  .cells{flex:1;display:flex;height:100%;}
+  .cell{flex:1;border-right:1px solid rgba(255,255,255,.10);}
+  .cell.last{border-right:none;
+    background:repeating-linear-gradient(45deg, rgba(255,255,255,.18) 0 5px, rgba(0,0,0,.20) 5px 10px);}
+
+  /* cheval (seul élément mobile, centré dans sa case) */
+  .runner{position:absolute;top:0;height:100%;display:flex;align-items:center;z-index:2;
+    font-size:30px;line-height:1;pointer-events:none;will-change:left;
+    transition:left .9s cubic-bezier(.34,1.2,.64,1);
+    filter:drop-shadow(0 3px 3px rgba(0,0,0,.4));}
+  .runner .gee{display:block;transform:scaleX(-1);line-height:1;}  /* tête vers l'arrivée */
+  .runner.running{animation:gallop .35s ease-in-out infinite;}
   @keyframes gallop{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-5px) rotate(1deg)}}
-  .horse.won .silk{box-shadow:inset 0 -5px 9px rgba(0,0,0,.25),0 0 0 4px var(--gold),0 0 24px var(--gold);}
-  .horse.recoil .silk{animation:recoilFlash .65s ease;}
+  .runner.recoil{animation:recoilFlash .65s ease;}
   @keyframes recoilFlash{
-    0%,100%{box-shadow:inset 0 -5px 9px rgba(0,0,0,.25),0 4px 8px rgba(0,0,0,.35);}
-    30%{box-shadow:0 0 0 5px #d6443b,0 0 22px #d6443b;}
+    0%,100%{filter:drop-shadow(0 3px 3px rgba(0,0,0,.4));transform:scale(1);}
+    30%{filter:drop-shadow(0 0 11px #d6443b) drop-shadow(0 0 5px #d6443b);transform:scale(1.18);}
   }
+  .runner.won{filter:drop-shadow(0 0 11px var(--gold)) drop-shadow(0 0 5px var(--gold));}
 
   /* étages (cartes de recul) */
   .etages{display:flex;gap:6px;justify-content:space-between;margin-bottom:12px;}
   .etage{
     flex:1;height:44px;border-radius:8px;position:relative;display:grid;place-items:center;
-    background:repeating-linear-gradient(45deg,#1c4a39 0 6px,#163a2d 6px 12px);
+    background:repeating-linear-gradient(45deg,var(--turf) 0 6px,var(--turf-deep) 6px 12px);
     border:2px solid var(--gold-deep);color:var(--gold);
     font-family:'Space Mono';font-weight:700;font-size:18px;transition:.35s;
   }
@@ -230,10 +245,10 @@
     display:grid;place-items:center;box-shadow:var(--shadow);}
   .card-back{
     background:
-      repeating-linear-gradient(45deg,#1c4a39 0 8px,#163a2d 8px 16px);
+      repeating-linear-gradient(45deg,var(--turf) 0 8px,var(--turf-deep) 8px 16px);
     border:3px solid var(--gold);
   }
-  .card-back::after{content:"PMU";font-family:'Oswald';font-weight:700;color:var(--gold);
+  .card-back::after{content:var(--brand);font-family:'Oswald';font-weight:700;color:var(--gold);
     letter-spacing:.1em;font-size:20px;}
   .card-front{background:var(--paper);transform:rotateY(180deg);border:2px solid #d8cba9;
     flex-direction:column;color:var(--ink);font-family:'Space Mono';font-weight:700;}
@@ -241,9 +256,9 @@
   .card-front .pip{font-size:40px;line-height:1;margin-top:4px;}
 
   .pace{display:flex;gap:8px;align-items:center;justify-content:center;font-size:12px;
-    color:var(--cream);text-transform:uppercase;letter-spacing:.08em;}
-  .pace button{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);
-    color:var(--white);border-radius:8px;padding:6px 12px;font-family:'Oswald';cursor:pointer;font-size:12px;}
+    color:var(--on-bg);text-transform:uppercase;letter-spacing:.08em;}
+  .pace button{background:rgba(128,128,128,.16);border:1px solid var(--on-bg-dim);
+    color:var(--on-bg);border-radius:8px;padding:6px 12px;font-family:'Oswald';cursor:pointer;font-size:12px;}
   .pace button.on{background:var(--gold);color:var(--ink);border-color:var(--gold);}
 
   /* ---------- Arrivée ---------- */
@@ -259,7 +274,7 @@
   .result-list .grp-t{font-family:'Oswald';text-transform:uppercase;font-size:13px;letter-spacing:.1em;
     margin-bottom:8px;display:flex;align-items:center;gap:8px;}
   .pill{display:inline-block;font-family:'Space Mono';font-size:11px;padding:2px 8px;border-radius:20px;}
-  .pill.win{background:#1c4a39;color:var(--gold);}
+  .pill.win{background:var(--turf);color:var(--gold);}
   .pill.lose{background:#7a2c20;color:#ffd9cf;}
   .res-row{display:flex;justify-content:space-between;align-items:center;background:var(--white);
     border-radius:9px;padding:11px 13px;margin-bottom:7px;border:1px solid #e2d6b6;color:var(--ink);}
@@ -267,11 +282,29 @@
   .res-row .amt{font-family:'Space Mono';font-weight:700;}
   .amt.win{color:#2e7d4f;}.amt.lose{color:#b5462f;}
 
-  .moderation{text-align:center;font-size:11px;color:rgba(255,255,255,.55);margin-top:24px;
+  .moderation{text-align:center;font-size:11px;color:var(--on-bg-dim);margin-top:24px;
     letter-spacing:.04em;line-height:1.6;}
-  .moderation b{color:rgba(255,255,255,.8);}
+  .moderation b{color:var(--on-bg);}
 
   .err{color:#ffd9cf;font-size:13px;margin-top:8px;min-height:18px;}
+
+  /* eyebrow lisible sur le ciel en mode TDF */
+  body[data-theme="tdf"] .eyebrow{color:var(--on-bg-dim);}
+
+  /* switch de thème (Summer édition) */
+  .theme-toggle{display:flex;align-items:center;gap:12px;background:var(--paper);color:var(--ink);
+    border-radius:14px;padding:13px 15px;margin-bottom:16px;box-shadow:var(--shadow);
+    border:1px solid rgba(0,0,0,.08);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+  .theme-toggle .tt-ico{font-size:22px;flex-shrink:0;}
+  .theme-toggle .tt-txt{flex:1;line-height:1.25;min-width:0;}
+  .theme-toggle .tt-txt b{font-size:14px;display:block;color:var(--ink);}
+  .theme-toggle .tt-txt span{font-size:12px;color:var(--ink-soft);}
+  .tt-switch{width:48px;height:28px;border-radius:20px;background:#cfc7b0;position:relative;
+    transition:.2s;flex-shrink:0;}
+  .theme-toggle.on .tt-switch{background:var(--gold-deep);}
+  .tt-switch .knob{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;
+    background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3);}
+  .theme-toggle.on .tt-switch .knob{left:23px;}
 
   /* écurie : profils enregistrés */
   .stable{display:flex;flex-wrap:wrap;gap:9px;}
@@ -306,7 +339,7 @@
   .stat{background:var(--white);border:1px solid #e2d6b6;border-radius:10px;padding:11px 12px;}
   .stat .v{font-family:'Space Mono';font-size:22px;font-weight:700;line-height:1;}
   .stat .k{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);margin-top:5px;}
-  .modal .fav{display:flex;align-items:center;gap:9px;background:#1c4a39;color:var(--cream);
+  .modal .fav{display:flex;align-items:center;gap:9px;background:var(--turf);color:var(--cream);
     border-radius:10px;padding:10px 12px;font-size:13px;}
   .modal .fav .fdisc{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:15px;}
   .modal-actions{margin-top:14px;display:flex;gap:10px;}
@@ -321,7 +354,7 @@
   .dist-hint{font-size:12px;color:var(--ink-soft);margin-top:10px;line-height:1.5;}
 
   /* carte règles */
-  .rules{background:linear-gradient(180deg,#1c4a39,#163a2d);border:1.5px solid var(--gold-deep);
+  .rules{background:linear-gradient(180deg,var(--turf),var(--turf-deep));border:1.5px solid var(--gold-deep);
     border-radius:14px;margin-bottom:16px;overflow:hidden;box-shadow:var(--shadow);}
   .rules-head{display:flex;align-items:center;gap:10px;padding:15px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
   .rules-head .ico{font-size:19px;}
@@ -370,7 +403,7 @@
   #screen-grille{display:none;}
   .screen-title{font-family:'Oswald';text-transform:uppercase;text-align:center;letter-spacing:.1em;
     font-size:19px;margin:4px 0 2px;}
-  .screen-sub{text-align:center;color:var(--cream);opacity:.8;font-size:13px;margin-bottom:14px;}
+  .screen-sub{text-align:center;color:var(--on-bg-dim);font-size:13px;margin-bottom:14px;}
   .grille-card{background:var(--paper);border-radius:14px;padding:6px;box-shadow:var(--shadow);
     border:1px solid rgba(0,0,0,.08);margin-bottom:16px;}
   .cote-row{display:flex;align-items:center;gap:12px;padding:13px 12px;border-radius:11px;margin:6px;
@@ -388,7 +421,7 @@
   /* podium de soirée */
   #screen-podium{display:none;text-align:center;}
   .section-t{font-family:'Oswald';text-transform:uppercase;letter-spacing:.1em;font-size:13px;
-    color:var(--cream);opacity:.85;margin:0 0 10px;text-align:left;}
+    color:var(--on-bg-dim);margin:0 0 10px;text-align:left;}
   .podium-wrap{display:flex;justify-content:center;align-items:flex-end;gap:8px;margin:6px 0 18px;}
   .pod{background:var(--paper);color:var(--ink);border-radius:12px;padding:12px 6px;flex:1;max-width:118px;
     box-shadow:var(--shadow);border:1px solid rgba(0,0,0,.08);}
@@ -397,7 +430,7 @@
   .pod .pname{font-family:'Oswald';text-transform:uppercase;font-weight:600;font-size:14px;margin:6px 0 2px;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .pod .pamt{font-family:'Space Mono';font-weight:700;font-size:13px;color:#b5462f;}
-  .pod-extra{background:#1c4a39;color:var(--cream);border-radius:11px;padding:12px 14px;margin-bottom:16px;
+  .pod-extra{background:var(--turf);color:var(--cream);border-radius:11px;padding:12px 14px;margin-bottom:16px;
     font-size:13px;text-align:center;}
   .pod-extra b{color:var(--gold);}
 </style>
@@ -406,13 +439,20 @@
 <div class="wrap">
 
   <header>
-    <div class="eyebrow">Course à boire · 4 partants</div>
-    <h1>Le PMU<span class="sub">Tiercé dans le désordre</span></h1>
+    <div class="eyebrow" id="eyebrow">Course à boire · 4 partants</div>
+    <h1 id="title">Le PMU<span class="sub">Tiercé dans le désordre</span></h1>
     <div class="rule"></div>
   </header>
 
   <!-- ============ ÉCRAN 1 : GUICHET ============ -->
   <section id="screen-accueil">
+
+    <!-- switch de thème -->
+    <div class="theme-toggle" id="themeToggle">
+      <span class="tt-ico" id="ttIco">☀️</span>
+      <div class="tt-txt"><b id="ttTitle">Summer édition</b><span id="ttSub">Passer en mode Tour de France</span></div>
+      <span class="tt-switch"><span class="knob"></span></span>
+    </div>
 
     <!-- règles -->
     <div class="rules" id="rules">
@@ -421,7 +461,7 @@
         <h3>Comment on joue ?</h3>
         <span class="chev">▾</span>
       </div>
-      <div class="rules-body">
+      <div class="rules-body" id="rulesBody">
         <div class="step"><div class="si">🎫</div><div class="st"><b>Mise.</b> Chaque joueur choisit une couleur — c'est son cheval — et met des gorgées en jeu.</div></div>
         <div class="step"><div class="si">🃏</div><div class="st"><b>La course.</b> On tire des cartes : à chaque couleur tirée, le cheval de cette couleur avance d'une case.</div></div>
         <div class="step"><div class="si">⬇️</div><div class="st"><b>Les étages.</b> Quand tous les chevaux ont passé un étage, sa carte se retourne et ce cheval recule d'une case.</div></div>
@@ -430,7 +470,7 @@
     </div>
 
     <div class="panel" id="stablePanel" style="display:none;">
-      <h2><span class="n">★</span>L'écurie</h2>
+      <h2 id="stableTitle"><span class="n">★</span>L'écurie</h2>
       <div class="stable" id="stable"></div>
     </div>
 
@@ -463,8 +503,8 @@
 
   <!-- ============ GRILLE DE DÉPART (cotes) ============ -->
   <section id="screen-grille">
-    <div class="screen-title">Grille de départ</div>
-    <div class="screen-sub">Les cotes juste avant le top départ</div>
+    <div class="screen-title" id="grilleTitle">Grille de départ</div>
+    <div class="screen-sub" id="grilleSub">Les cotes juste avant le top départ</div>
     <div class="grille-card" id="grille"></div>
     <button class="btn btn-gold" id="goRace">Top départ !</button>
     <button class="btn btn-ghost" id="backToAccueil" style="margin-top:10px;">Modifier les paris</button>
@@ -498,7 +538,7 @@
   <section id="screen-arrivee">
     <div class="winner-card">
       <div class="winner-silk" id="winSilk"></div>
-      <div class="lbl">Vainqueur du PMU</div>
+      <div class="lbl" id="winLabel">Vainqueur du PMU</div>
       <div class="nm" id="winName">—</div>
     </div>
     <div class="result-list" id="results"></div>
@@ -622,7 +662,7 @@
         row.className = "preg-row" + (p.horse===null ? " nobet" : "");
         const silks = HORSES.map(h=>
           `<div class="preg-silk${p.horse===h.id?' sel':''}" style="background:${h.color}" data-h="${h.id}">
-             <span class="pn">${h.num}</span>${h.pip}
+             ${h.pip}
            </div>`).join("");
         row.innerHTML = `
           <div class="preg-top">
@@ -706,49 +746,59 @@
   function beginRace(){
     positions=[0,0,0,0];
     winner=null; raceOver=false; drawing=false;
-    buildDeck();
-    buildCheckpoints();
-    renderTrack();
-    renderTote();
-    renderEtages();
+    show("course");                               // on bascule l'écran AVANT tout rendu
+    try {
+      buildDeck();
+      buildCheckpoints();
+      renderTrack();
+      renderTote();
+      renderEtages();
+    } catch(e){ console.error("beginRace:", e); }
     $("#announce").classList.remove("show");
     $("#card").classList.remove("flipped");
     $("#drawBtn").disabled=false;
     $("#drawBtn").textContent="Tirer une carte";
     setAuto(false);
-    show("course");
     window.scrollTo({top:0});
+    requestAnimationFrame(()=>{ try{ updateHorses(); }catch(e){} });
   }
 
   function renderTrack(){
     const track = $("#track");
     track.innerHTML = "";
+    const N1 = finishSteps + 1;            // cases : départ (0) + une par étape
     HORSES.forEach(h=>{
       const lane = document.createElement("div");
-      lane.className="lane";
-      let furl="<div class='furlongs'>";
-      for(let i=0;i<finishSteps;i++) furl+="<span></span>";
-      furl+="</div>";
-      lane.innerHTML = furl + `
-        <div class="horse" id="horse-${h.id}">
+      lane.className = "lane";
+      lane.id = "lane-"+h.id;
+      let cells = "<div class='cells'>";
+      for(let i=0;i<N1;i++) cells += `<div class="cell${i===N1-1?' last':''}"></div>`;
+      cells += "</div>";
+      lane.innerHTML = `
+        <div class="startbox">
           <div class="silk" style="background:${h.color}">
-            <span class="num">${h.num}</span>${h.pip}
+            ${h.pip}
           </div>
-          <span class="emoji">${h.emoji}</span>
-        </div>`;
+        </div>
+        ${cells}
+        <div class="runner" id="runner-${h.id}"><span class="gee">${theme.runner}</span></div>`;
       track.appendChild(lane);
     });
-    updateHorses(false);
+    requestAnimationFrame(()=>updateHorses());
   }
 
-  function updateHorses(animateBob){
-    const trackW = $("#track").clientWidth;
+  function updateHorses(){
+    const N1 = finishSteps + 1;
     HORSES.forEach(h=>{
-      const el = document.getElementById("horse-"+h.id);
-      if(!el) return;
-      const usable = trackW - 110;           // marge silk + poteau arrivée
-      const left = 6 + (positions[h.id]/finishSteps)*usable;
-      el.style.left = left+"px";
+      const lane = document.getElementById("lane-"+h.id);
+      if(!lane) return;
+      const cells = lane.querySelector(".cells");
+      const startbox = lane.querySelector(".startbox");
+      const runner = document.getElementById("runner-"+h.id);
+      if(!cells || !startbox || !runner) return;
+      const cellW = cells.clientWidth / N1;
+      const centerX = startbox.offsetWidth + (positions[h.id] + 0.5) * cellW;  // milieu de la case
+      runner.style.left = (centerX - runner.offsetWidth/2) + "px";
     });
   }
 
@@ -759,7 +809,7 @@
       const c=document.createElement("div");
       c.className="cell";
       c.innerHTML = `<div class="pos" style="color:${h.color}">${positions[h.id]}</div>
-                     <div class="lbl">${h.num} ${h.name}</div>`;
+                     <div class="lbl">${h.name}</div>`;
       tote.appendChild(c);
     });
   }
@@ -781,7 +831,7 @@
       const h = HORSES[cp.horse];
       const d = document.createElement("div");
       d.className = "etage" + (cp.revealed ? " revealed" : "");
-      d.innerHTML = `<span class="lv">Étage ${cp.level}</span>` +
+      d.innerHTML = `<span class="lv">${theme.etage} ${cp.level}</span>` +
                     (cp.revealed ? `<span style="color:${h.color}">${h.pip}</span>` : "?");
       box.appendChild(d);
     });
@@ -804,9 +854,9 @@
         cp.revealed = true;
         const h = HORSES[cp.horse];
         positions[cp.horse] = Math.max(0, positions[cp.horse]-1);
-        const el = document.getElementById("horse-"+cp.horse);
+        const el = document.getElementById("runner-"+cp.horse);
         if(el){ el.classList.add("recoil"); setTimeout(()=>el.classList.remove("recoil"),650); }
-        announce(`Étage ${cp.level} — ${h.name} recule d'une case !`);
+        announce(`${theme.etage} ${cp.level} — ${h.name} ${theme.recoilText}`);
         updateHorses(true);
         renderTote();
         renderEtages();
@@ -834,7 +884,7 @@
     cardEl.classList.add("flipped");
 
     // faire avancer le cheval
-    const el = document.getElementById("horse-"+card.horse);
+    const el = document.getElementById("runner-"+card.horse);
     el.classList.add("running");
 
     setTimeout(()=>{
@@ -876,14 +926,14 @@
     winner = horseId;
     if(autoTimer){ clearInterval(autoTimer); autoTimer=null; }
     drawBtn.disabled = true;
-    const wel = document.getElementById("horse-"+horseId);
+    const wel = document.getElementById("runner-"+horseId);
     if(wel) wel.classList.add("won");
 
     setTimeout(()=>{
       const h = HORSES[horseId];
       $("#winSilk").style.background = h.color;
       $("#winSilk").innerHTML = h.pip;
-      $("#winName").textContent = `N°${h.num} — ${h.name}`;
+      $("#winName").textContent = `${h.name}`;
 
       const winners = players.filter(p=>p.horse===horseId);
       const losers  = players.filter(p=>p.horse!==horseId);
@@ -925,7 +975,7 @@
   });
 
   // recalcul des positions si rotation/resize
-  window.addEventListener("resize", ()=>{ if(screens.course.style.display==="block") updateHorses(false); });
+  window.addEventListener("resize", ()=>{ if(screens.course.style.display==="block") updateHorses(); });
 
   function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));}
 
@@ -1080,7 +1130,7 @@
     if(fav>=0){
       favBox.style.display="flex";
       favBox.innerHTML = `<div class="fdisc" style="background:${HORSES[fav].color}">${HORSES[fav].pip}</div>
-        <div>Cheval fétiche : <b>${HORSES[fav].name}</b></div>`;
+        <div>${theme.favLabel} : <b>${HORSES[fav].name}</b></div>`;
     } else { favBox.style.display="none"; }
     modal.classList.add("open");
   }
@@ -1103,26 +1153,89 @@
     renderStable();
   });
 
-  // ---- Distance de la course (presets nommés) ----
-  const PRESETS = [
-    {label:"Rapide",    steps:4},
-    {label:"Classique", steps:6},
-    {label:"Marathon",  steps:9},
-  ];
+  // ---- Distance de la course (libellés selon le thème) ----
   function renderDist(){
+    const presets = theme.distances;
     const box = $("#presetPick");
     box.innerHTML = "";
-    PRESETS.forEach(pr=>{
+    presets.forEach(pr=>{
       const d = document.createElement("div");
       d.className = "preset" + (pr.steps===finishSteps ? " sel" : "");
       d.innerHTML = `<div class="pt">${pr.label}</div><div class="pc">${pr.steps} cases</div>`;
       d.addEventListener("click", ()=>{ finishSteps = pr.steps; renderDist(); });
       box.appendChild(d);
     });
+    const et = theme.etage.toLowerCase();
     $("#distHint").innerHTML =
-      `<b>${finishSteps} cases</b> · ${finishSteps-1} étage${finishSteps-1>1?"s":""} de recul. ` +
-      `Marathon (9) est le maximum tenable avec un jeu de 52 cartes.`;
+      `<b>${finishSteps} cases</b> · ${finishSteps-1} ${et}${finishSteps-1>1?"s":""} de recul. ` +
+      `${presets[2].label} (9) est le maximum tenable avec un jeu de 52 cartes.`;
   }
+
+  /* ============================================================
+     THÈMES : PMU classique  <->  Tour de France (Summer édition)
+     ============================================================ */
+  const RULES_PMU =
+    `<div class="step"><div class="si">🎫</div><div class="st"><b>Mise.</b> Chaque joueur choisit une couleur — c'est son cheval — et met des gorgées en jeu.</div></div>
+     <div class="step"><div class="si">🃏</div><div class="st"><b>La course.</b> On tire des cartes : à chaque couleur tirée, le cheval de cette couleur avance d'une case.</div></div>
+     <div class="step"><div class="si">⬇️</div><div class="st"><b>Les étages.</b> Quand tous les chevaux ont passé un étage, sa carte se retourne et ce cheval recule d'une case.</div></div>
+     <div class="step"><div class="si">🏁</div><div class="st"><b>L'arrivée.</b> Premier à la ligne : ceux qui avaient parié sur lui distribuent leurs gorgées, les autres boivent les leurs.</div></div>`;
+  const RULES_TDF =
+    `<div class="step"><div class="si">🎫</div><div class="st"><b>Pari.</b> Chaque joueur choisit une couleur — c'est son coureur — et met des gorgées en jeu.</div></div>
+     <div class="step"><div class="si">🃏</div><div class="st"><b>L'étape.</b> On tire des cartes : à chaque couleur tirée, le vélo de cette couleur avance d'une case.</div></div>
+     <div class="step"><div class="si">⛰️</div><div class="st"><b>Les cols.</b> Quand tous les coureurs ont passé un col, sa carte se retourne et ce coureur défaille et perd une case.</div></div>
+     <div class="step"><div class="si">🏁</div><div class="st"><b>L'arrivée.</b> Premier sur la ligne : ceux qui avaient parié sur lui distribuent leurs gorgées, les autres boivent les leurs.</div></div>`;
+
+  const THEMES = {
+    pmu: {
+      brand:"Le PMU", subtitle:"Tiercé dans le désordre", eyebrow:"Course à boire · 4 partants",
+      runner:"🐎", stable:"L'écurie", etage:"Étage", recoilText:"recule d'une case !",
+      distances:[{label:"Rapide",steps:4},{label:"Classique",steps:6},{label:"Marathon",steps:9}],
+      startBtn:"Lancer la course", winnerLabel:"Vainqueur du PMU",
+      grilleTitle:"Grille de départ", grilleSub:"Les cotes juste avant le top départ",
+      favLabel:"Cheval fétiche", themeColor:"#163a2d", rules:RULES_PMU,
+      ttTitle:"Summer édition", ttSub:"Passer en mode Tour de France", ttIco:"☀️"
+    },
+    tdf: {
+      brand:"Le TDF", subtitle:"La grande boucle", eyebrow:"Course à boire · 4 coureurs",
+      runner:"🚴", stable:"Le peloton", etage:"Col", recoilText:"défaille et perd une case !",
+      distances:[{label:"Sprint",steps:4},{label:"Étape",steps:6},{label:"Montagne",steps:9}],
+      startBtn:"Lancer l'étape", winnerLabel:"Vainqueur de l'étape",
+      grilleTitle:"Ligne de départ", grilleSub:"Les cotes juste avant le départ",
+      favLabel:"Couleur fétiche", themeColor:"#f6d32d", rules:RULES_TDF,
+      ttTitle:"Mode Tour de France", ttSub:"Revenir au PMU classique", ttIco:"🚴"
+    }
+  };
+
+  const THEME_KEY = "pmu_theme";
+  let currentTheme = "pmu";
+  let theme = THEMES.pmu;
+
+  function applyTheme(name){
+    if(!THEMES[name]) name = "pmu";
+    currentTheme = name; theme = THEMES[name];
+    document.body.dataset.theme = name;                 // déclenche les variables CSS
+    // libellés statiques
+    $("#eyebrow").textContent = theme.eyebrow;
+    $("#title").innerHTML = `${theme.brand}<span class="sub">${theme.subtitle}</span>`;
+    $("#stableTitle").innerHTML = `<span class="n">★</span>${theme.stable}`;
+    $("#startRace").textContent = theme.startBtn;
+    $("#rulesBody").innerHTML = theme.rules;
+    $("#grilleTitle").textContent = theme.grilleTitle;
+    $("#grilleSub").textContent = theme.grilleSub;
+    $("#winLabel").textContent = theme.winnerLabel;
+    // switch visuel
+    $("#themeToggle").classList.toggle("on", name==="tdf");
+    $("#ttTitle").textContent = theme.ttTitle;
+    $("#ttSub").textContent = theme.ttSub;
+    $("#ttIco").textContent = theme.ttIco;
+    // couleur de la barre du navigateur
+    const meta = document.querySelector('meta[name=theme-color]');
+    if(meta) meta.content = theme.themeColor;
+    // re-rendu des écrans dépendant du thème
+    renderDist();
+    try{ localStorage.setItem(THEME_KEY, name); }catch(e){}
+  }
+  $("#themeToggle").addEventListener("click", ()=> applyTheme(currentTheme==="tdf" ? "pmu" : "tdf"));
 
   // ---- Carte règles (ouverte à la première visite seulement) ----
   const RULES_KEY = "pmu_seen_rules_v1";
@@ -1137,9 +1250,11 @@
   $("#rulesHead").addEventListener("click", ()=> $("#rules").classList.toggle("open"));
 
   // init
+  let savedTheme = "pmu";
+  try{ savedTheme = localStorage.getItem(THEME_KEY) || "pmu"; }catch(e){}
+  applyTheme(savedTheme);     // applique le thème + renderDist
   renderRoster();
   renderStable();
-  renderDist();
   refreshSessionUI();
   nameInput.focus();
 })();
